@@ -7,5 +7,5 @@ type ThemesType = {
 
 export const themes: ThemesType = {
   dark: 'dark',
-  light: 'light'
+  light: 'light',
 };

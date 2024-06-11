@@ -11,17 +11,11 @@ export type ButtonProps = React.PropsWithChildren<{
 }> &
   React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export const Button: React.FC<ButtonProps> = ({
-  children,
-  onClick,
-  className,
-  disabled = false,
-  ...rest
-}) => {
+export const Button: React.FC<ButtonProps> = ({ children, onClick, className, disabled = false, ...rest }) => {
   const classNames = cn(className, styles.button, disabled && styles.button_disabled);
 
   return (
-    <button type="button" className={classNames} onClick={onClick} disabled={disabled} {...rest}>
+    <button type='button' className={classNames} onClick={onClick} disabled={disabled} {...rest}>
       {children}
     </button>
   );

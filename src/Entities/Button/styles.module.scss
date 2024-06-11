@@ -1,16 +1,28 @@
 @import "@/styles/variables.scss";
 
+:root[data-theme="light"] {
+  --btn-background-color: #1D2130;
+  --btn-color: #ffffff;
+}
+
+:root[data-theme="dark"] {
+  --btn-background-color: #ffffff;
+  --btn-color: #1D2130;
+}
+
 .button {
+  cursor: pointer;
+  background-color: var(--btn-background-color);
+  color: var(--btn-color);
   border: 0;
   transition: background-color 150ms;
-}
 
-button[data-theme="light"] {
-  color: $white;
-  background-color: $black-primary;
-}
+  &:hover {
+    background-color: $black;
+  }
 
-button[data-theme="dark"] {
-  color: $black;
-  background-color: $light-gray;
+  &_disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
 }

@@ -3,12 +3,12 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import themeReducer from './reducers/ThemeSlice.ts';
 
 const rootReducer = combineReducers({
-  themeReducer
+  themeReducer,
 });
 
 export const setupStore = () => {
   return configureStore({
-    reducer: rootReducer
+    reducer: rootReducer,
   });
 };
 
