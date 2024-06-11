@@ -9,7 +9,6 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:prettier/recommended",
     "plugin:import/recommended",
-    "plugin:import/typescript"
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', "node_modules/", "build/", "dist/", ".prettierrc",],
   overrides: [
@@ -29,7 +28,16 @@ module.exports = {
     sourceType: "module",
     project: "tsconfig.json",
   },
-  plugins: ['react-refresh', "@typescript-eslint", "react", "prettier", "import"],
+  plugins: ['react-refresh',
+    "@typescript-eslint",
+    "react", "prettier",
+    "import",
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    },
+  },
   rules: {
     'react-refresh/only-export-components': [
       'warn',
@@ -61,7 +69,7 @@ module.exports = {
         "alphabetize": {
           "order": "asc",
           "caseInsensitive": true
-        },
+        }
       }
     ]
   },
