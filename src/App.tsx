@@ -4,12 +4,12 @@ import React, { useRef } from 'react';
 import { Drawer } from '@mui/material';
 import { Navigate, Route, Routes } from 'react-router';
 
-import { Button } from '@/entities/Button';
-import { CustomDrawerRef } from '@/entities/Drawer/Drawer.tsx';
-import ThemeSwitch from '@/entities/ThemeSwitch/ThemeSwitch.tsx';
 import { useAppSelector } from '@/hooks/redux.ts';
-import Main from '@/pages/Main/Main.tsx';
-import RandomJokes from '@/pages/RandomJokes/RandomJokes.tsx';
+import { pages } from '@/pages/config/pages.ts';
+import { CustomDrawerRef } from '@/shared/ui/Drawer/Drawer.tsx';
+import ThemeSwitch from '@/shared/ui/ThemeSwitch/ThemeSwitch.tsx';
+
+import { Button } from './shared/ui/Button';
 
 function App() {
   const { theme } = useAppSelector((state) => state.themeReducer);
@@ -31,8 +31,9 @@ function App() {
         Кнопка
       </Button>
       <Routes>
-        <Route path='/' element={<Main />} />
-        <Route path='random-jokes' element={<RandomJokes />} />
+        {pages.map((page) => {
+          return <Route key={page.id} path={page.href} element={<page.element />} />;
+        })}
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
     </>

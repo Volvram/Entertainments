@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { getTheme } from '@/shared/getTheme.ts';
+import { getTheme } from '@/shared/lib/getTheme.ts';
 import { ThemeType } from '@/store/models/ThemeType.ts';
 
 interface ThemeState {

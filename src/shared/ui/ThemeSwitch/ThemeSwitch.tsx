@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.ts';
-import { themes } from '@/shared/themes.ts';
+import { themes } from '@/shared/config/themes.ts';
 import { themeSlice } from '@/store/reducers/ThemeSlice.ts';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({

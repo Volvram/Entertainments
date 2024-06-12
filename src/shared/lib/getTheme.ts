@@ -1,4 +1,4 @@
-import { themes } from '@/shared/themes.ts';
+import { themes } from '@/shared/config/themes.ts';
 
 export const getTheme = () => {
   const theme = `${window?.localStorage?.getItem('theme')}`;
