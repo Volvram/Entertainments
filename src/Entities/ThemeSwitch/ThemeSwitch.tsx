@@ -6,7 +6,7 @@ import Switch from '@mui/material/Switch';
 
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.ts';
 import { themes } from '@/shared/themes.ts';
-import { themeSlice } from '@/Store/reducers/ThemeSlice.ts';
+import { themeSlice } from '@/store/reducers/ThemeSlice.ts';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -72,7 +72,7 @@ const ThemeSwitch: React.FC = () => {
     <FormGroup>
       <FormControlLabel
         control={<MaterialUISwitch sx={{ m: 1 }} checked={_checked} onChange={handleChange} />}
-        label='MUI switch'
+        label='Темная тема'
       />
     </FormGroup>
   );
