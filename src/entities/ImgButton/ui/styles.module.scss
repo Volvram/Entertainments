@@ -1,0 +1,27 @@
+@import "@/shared/styles/variables.scss";
+
+:root[data-theme="light"] {
+  --icon-btn-background-color: #ffffff;
+  --icon-btn-color: #000000;
+}
+
+:root[data-theme="dark"] {
+  --icon-btn-background-color: #000000;
+  --icon-btn-color: #ffffff;
+}
+
+.root {
+  width: fit-content;
+
+  &_button {
+    background-color: var(--icon-btn-background-color);
+    color: var(--icon-btn-color)
+  }
+
+  &_icon {
+    width: 24px;
+    height: 24px;
+    background-color: var(--icon-btn-background-color);
+    color: var(--icon-btn-color)
+  }
+}

@@ -1,19 +1,18 @@
-import './App.css';
+import './App.scss';
 import React, { useRef } from 'react';
 
-import { Drawer } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import { Navigate, Route, Routes } from 'react-router';
 
+import { ImgButton } from '@/entities/ImgButton';
 import { useAppSelector } from '@/hooks/redux.ts';
 import { pages } from '@/pages/config/pages.ts';
-import { CustomDrawerRef } from '@/shared/ui/Drawer/Drawer.tsx';
-import ThemeSwitch from '@/shared/ui/ThemeSwitch/ThemeSwitch.tsx';
-
-import { Button } from './shared/ui/Button';
+import { CustomDrawerRefType } from '@/shared/ui/Drawer/types.ts';
+import { NavDrawer } from '@/widgets/NavDrawer';
 
 function App() {
   const { theme } = useAppSelector((state) => state.themeReducer);
-  const drawerRef = useRef<CustomDrawerRef>();
+  const menuDrawerRef = useRef<CustomDrawerRefType | null>(null);
 
   React.useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -22,14 +21,14 @@ function App() {
 
   return (
     <>
-      <Drawer ref={drawerRef}>Меню</Drawer>
-      <ThemeSwitch />
-      <Button
+      <NavDrawer forwardRef={menuDrawerRef} />
+      <ImgButton
+        icon={<MenuIcon />}
         onClick={() => {
-          drawerRef.current?.open();
-        }}>
-        Кнопка
-      </Button>
+          menuDrawerRef.current?.open();
+        }}
+        className='menu'
+      />
       <Routes>
         {pages.map((page) => {
           return <Route key={page.id} path={page.href} element={<page.element />} />;

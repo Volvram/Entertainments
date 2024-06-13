@@ -1,17 +1,14 @@
-export type NavMenuSectionType = {
-  id: string;
-  title: string;
-  href: string;
-};
-export const navMenuSections: NavMenuSectionType[] = [
+import { SectionType } from '@/entities/Section/types.ts';
+
+export const navMenuSections: SectionType[] = [
   {
     id: 'main',
-    title: 'Главная',
+    name: 'Главная',
     href: '/',
   },
   {
     id: 'random-jokes',
-    title: 'Рандомные шутки',
+    name: 'Рандомные шутки',
     href: '/random-jokes',
   },
 ];

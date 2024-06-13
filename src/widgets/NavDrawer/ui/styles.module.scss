@@ -1,0 +1,9 @@
+@import "@/shared/styles/variables.scss";
+
+.root {
+  padding: 5px;
+
+  &_h {
+    font-size: $h2;
+  }
+}

@@ -1,22 +1,22 @@
 import React from 'react';
 
-import { NavMenuSectionType } from '@/features/NavMenu/config/navMenuSections.ts';
+import { SectionType } from '@/entities/Section/types.ts';
 import { Main } from '@/pages/Main';
 import { RandomJokes } from '@/pages/RandomJokes';
 
-type PageType = NavMenuSectionType & {
+type PageType = SectionType & {
   element: React.FC;
 };
 export const pages: PageType[] = [
   {
     id: 'main',
-    title: 'Главная',
+    name: 'Главная',
     href: '/',
     element: Main,
   },
   {
     id: 'random-jokes',
-    title: 'Рандомные шутки',
+    name: 'Рандомные шутки',
     href: '/random-jokes',
     element: RandomJokes,
   },

@@ -1,0 +1,14 @@
+:root[data-theme="light"] {
+  --mui-drawer-background-color: #fafafa;
+  --mui-drawer-color: #000000;
+}
+
+:root[data-theme="dark"] {
+  --mui-drawer-background-color: #1D2130;
+  --mui-drawer-color: rgba(255, 255, 255, 0.87);
+}
+
+.MuiDrawer-paper.MuiDrawer-paperAnchorLeft {
+  background-color: var(--mui-drawer-background-color);
+  color: var(--mui-drawer-color);
+}

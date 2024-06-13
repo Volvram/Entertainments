@@ -1,0 +1,18 @@
+@import "@/shared/styles/variables.scss";
+
+:root[data-theme="light"] {
+  --btn-background-color: #1D2130;
+  --btn-color: #ffffff;
+}
+
+:root[data-theme="dark"] {
+  --btn-background-color: #ffffff;
+  --btn-color: #1D2130;
+}
+
+.root {
+  padding: 5px;
+  display: block;
+  color: var(--body-color);
+  text-decoration: none;
+}
