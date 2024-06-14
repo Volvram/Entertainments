@@ -2,11 +2,13 @@
 
 :root[data-theme="light"] {
   --btn-background-color: #1D2130;
+  --hovered-btn-background-color: #000000;
   --btn-color: #ffffff;
 }
 
 :root[data-theme="dark"] {
   --btn-background-color: #ffffff;
+  --hovered-btn-background-color: #A0A8B1;
   --btn-color: #1D2130;
 }
 
@@ -18,7 +20,7 @@
   transition: background-color 150ms;
 
   &:hover {
-    background-color: $black;
+    background-color: var(--hovered-btn-background-color);
   }
 
   &_disabled {
