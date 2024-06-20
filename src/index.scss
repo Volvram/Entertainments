@@ -15,17 +15,28 @@
 :root[data-theme="light"] {
   --body-background-color: #fafafa;
   --body-color: #000000;
+  --body-color-hovered: #A0A8B1;
 }
 
 :root[data-theme="dark"] {
   --body-background-color: #1D2130;
   --body-color: rgba(255, 255, 255, 0.87);
+  --body-color-hovered: #D9D9D9;
 }
 
 body {
   background: var(--body-background-color);
   color: var(--body-color)
 }
+
+a {
+  color: var(--body-color)
+}
+
+a:hover {
+  color: var(--body-color-hovered)
+}
+
 
 //
 //@media (prefers-color-scheme: light) {

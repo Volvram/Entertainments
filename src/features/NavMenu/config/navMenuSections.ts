@@ -7,6 +7,11 @@ export const navMenuSections: SectionType[] = [
     href: '/',
   },
   {
+    id: 'ip',
+    name: 'IP',
+    href: '/ip',
+  },
+  {
     id: 'random-jokes',
     name: 'Рандомные шутки',
     href: '/random-jokes',

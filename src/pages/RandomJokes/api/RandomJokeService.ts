@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import { randomJokeHost } from '@/pages/RandomJokes/config/hosts.ts';
 import { IRandomJoke } from '@/pages/RandomJokes/models/IRandomJoke.ts';
 
 export const randomJokeApi = createApi({
   reducerPath: 'randomJokeApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://official-joke-api.appspot.com',
+    baseUrl: randomJokeHost,
   }),
   endpoints: (build) => ({
     fetchRandomJoke: build.query<IRandomJoke, void>({

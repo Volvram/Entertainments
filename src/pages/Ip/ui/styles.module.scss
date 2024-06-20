@@ -1,0 +1,33 @@
+@import "@/shared/styles/variables.scss";
+
+.ip {
+  margin-left: 10%;
+  margin-right: 10%;
+
+  &_h {
+    font-size: $h2;
+    font-weight: 500;
+
+    &_adress {
+      text-decoration: underline;
+    }
+  }
+
+  &_search {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  &_geo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &_h {
+      font-size: $h3;
+      font-weight: 500;
+    }
+  }
+}

@@ -16,8 +16,12 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ forwardRef, title, className }) =
   return (
     <Drawer ref={forwardRef} className={className}>
       <ThemeSwitch />
-      <h2 className={styles.root_h}>{title}</h2>
-      <NavMenu />
+      {title && <h2 className={styles.root_h}>{title}</h2>}
+      <NavMenu
+        onChange={() => {
+          forwardRef.current?.close();
+        }}
+      />
     </Drawer>
   );
 };

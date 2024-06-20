@@ -11,7 +11,7 @@ type ImgButtonProps = {
   icon: string | ReactNode;
   onClick: () => void;
   name?: string;
-  className: string;
+  className?: string;
 };
 
 const ImgButton: React.FC<ImgButtonProps> = ({ icon, onClick, name, className }) => {

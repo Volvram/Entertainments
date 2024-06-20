@@ -12,8 +12,8 @@ type WithCrossProps = React.PropsWithChildren<{
 
 const WithCross: React.FC<WithCrossProps> = ({ onClose, children }) => {
   return (
-    <div className={styles.root}>
-      <ImgButton icon={<CloseIcon className={styles.root_cross} />} onClick={onClose} />
+    <div className={styles.withCross}>
+      <ImgButton icon={<CloseIcon />} onClick={onClose} className={styles.withCross_cross} />
       {children}
     </div>
   );
