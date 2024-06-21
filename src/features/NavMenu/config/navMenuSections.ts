@@ -16,4 +16,9 @@ export const navMenuSections: SectionType[] = [
     name: 'Рандомные шутки',
     href: '/random-jokes',
   },
+  {
+    id: 'cards',
+    name: 'Карточные игры',
+    href: '/cards',
+  },
 ];

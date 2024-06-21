@@ -31,6 +31,22 @@ function App() {
       />
       <Routes>
         {pages.map((page) => {
+          if (page.nestedPages) {
+            return (
+              <Route key={page.id} path={page.href} element={<page.element />}>
+                {page.nestedPages.map((nestedPage) => {
+                  return (
+                    <Route
+                      key={nestedPage.id}
+                      path={`${page.href}/${nestedPage.href}`}
+                      element={<nestedPage.element />}
+                    />
+                  );
+                })}
+                <Route path='*' element={<Navigate to={page.href ?? '/'} replace />} />
+              </Route>
+            );
+          }
           return <Route key={page.id} path={page.href} element={<page.element />} />;
         })}
         <Route path='*' element={<Navigate to='/' replace />} />

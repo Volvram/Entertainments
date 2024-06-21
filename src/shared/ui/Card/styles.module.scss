@@ -1,0 +1,25 @@
+@import "@/shared/styles/variables.scss";
+
+.card {
+  padding-bottom: 5px;
+  max-width: 300px;
+  border: 1px solid $light-gray;
+  box-shadow: $dark-shadow;
+  transition: transform 300ms ease-in;
+
+  &:hover {
+    transform: translateX(3px) translateY(-3px);
+  }
+
+  &_common {
+    &_title {
+      font-size: $h3;
+    }
+
+    &_img {
+      object-fit: cover;
+      width: 100%;
+      height: auto;
+    }
+  }
+}
