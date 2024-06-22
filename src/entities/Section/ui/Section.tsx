@@ -3,7 +3,7 @@ import React from 'react';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
 
-import { SectionType } from '@/entities/Section/types.ts';
+import { SectionType } from '@/entities/Section/types/SectionType.ts';
 
 import styles from './styles.module.scss';
 

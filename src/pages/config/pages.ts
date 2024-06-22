@@ -1,17 +1,17 @@
 import React from 'react';
 
-import { SectionType } from '@/entities/Section/types.ts';
+import { SectionType } from '@/entities/Section/types/SectionType.ts';
 import { Cards } from '@/pages/Cards';
-import { cardGames } from '@/pages/config/cardGames.ts';
+import { cardGames } from '@/pages/Cards/config/cardGames.ts';
 import { Ip } from '@/pages/Ip';
 import { Main } from '@/pages/Main';
 import { RandomJokes } from '@/pages/RandomJokes';
 
-type PageType<Nested = never> = SectionType & {
-  element: React.FC;
+export type PageType<Nested = any> = SectionType & {
+  element?: React.FC;
   nestedPages?: Nested[];
 };
-export const pages: PageType<PageType>[] = [
+export const pages: PageType[] = [
   {
     id: 'main',
     name: 'Главная',

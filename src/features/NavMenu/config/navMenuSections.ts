@@ -1,4 +1,4 @@
-import { SectionType } from '@/entities/Section/types.ts';
+import { SectionType } from '@/entities/Section/types/SectionType.ts';
 
 export const navMenuSections: SectionType[] = [
   {

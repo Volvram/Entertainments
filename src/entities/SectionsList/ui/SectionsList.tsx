@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Section } from '@/entities/Section';
-import { SectionType } from '@/entities/Section/types.ts';
+import { SectionType } from '@/entities/Section/types/SectionType.ts';
 
 import styles from './styles.module.scss';
 

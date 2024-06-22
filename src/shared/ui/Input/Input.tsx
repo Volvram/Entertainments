@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef, useCallback, useEffect, useRef } from 'react';
 
 import cn from 'classnames';
 
@@ -10,7 +10,6 @@ type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> 
   /** Callback, вызываемый при вводе данных в поле */
   onChange: ((value: string | string[]) => void) | ((value: string) => void);
   onEnterClick?: (value: string | string[]) => void;
-  forwardedRef?: React.RefObject<HTMLInputElement> | null;
   className?: string;
   containerClassName?: string;
   disabled?: boolean;
@@ -19,36 +18,42 @@ type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> 
   onIconClick?: () => void;
 };
 
-export const Input: React.FC<InputProps> = ({
-  value = '',
-  onChange,
-  onEnterClick,
-  forwardedRef,
-  className,
-  containerClassName,
-  disabled = false,
-  icon,
-  iconAlt = '',
-  onIconClick,
-  ...attributes
-}) => {
+export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  {
+    value = '',
+    onChange,
+    onEnterClick,
+    className,
+    containerClassName,
+    disabled = false,
+    icon,
+    iconAlt = '',
+    onIconClick,
+    ...attributes
+  },
+  ref
+) {
   const [currentValue, setValue] = React.useState<string | string[]>(value);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const inputRef = forwardedRef || React.useRef<HTMLInputElement | null>(null);
-
-  React.useEffect(() => {
-    const enterClick = (event: KeyboardEvent) => {
+  const enterClick = useCallback(
+    (event: KeyboardEvent) => {
       if (event.key === 'Enter') {
         onEnterClick && onEnterClick(currentValue);
       }
-    };
+    },
+    [onEnterClick, currentValue]
+  );
 
-    inputRef.current && inputRef.current.addEventListener('keydown', enterClick);
+  useEffect(() => {
+    const container = containerRef.current;
+
+    container && container.addEventListener('keydown', enterClick);
 
     return () => {
-      inputRef.current && inputRef.current.removeEventListener('keydown', enterClick);
+      container && container.removeEventListener('keydown', enterClick);
     };
-  }, [inputRef]);
+  }, [containerRef, enterClick]);
 
   React.useEffect(() => {
     setValue(value);
@@ -61,9 +66,9 @@ export const Input: React.FC<InputProps> = ({
   };
 
   return (
-    <div className={cn(containerClassName, styles.container)}>
+    <div ref={containerRef} className={cn(containerClassName, styles.container)}>
       <input
-        ref={inputRef}
+        ref={ref}
         type='text'
         className={cn(className, styles.input, disabled && styles.input_disabled)}
         value={currentValue}
@@ -84,4 +89,4 @@ export const Input: React.FC<InputProps> = ({
       )}
     </div>
   );
-};
+});

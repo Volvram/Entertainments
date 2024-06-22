@@ -2,13 +2,25 @@ import React from 'react';
 
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
-import { cardGames } from '@/pages/config/cardGames.ts';
+import { cardGames, CardGameType } from '@/pages/Cards/config/cardGames.ts';
 import { Card } from '@/shared/ui/Card';
 
 import styles from './styles.module.scss';
 
 const Cards: React.FC = () => {
   const { pathname } = useLocation();
+
+  const defineHref = (cardGame: CardGameType<CardGameType<any>>) => {
+    if (cardGame.href) {
+      if (cardGame.element) {
+        return cardGame.href.slice(1);
+      } else if (cardGame.nestedPages) {
+        return `${cardGame.href.slice(1)}${cardGame.nestedPages[0].href ?? ''}`;
+      }
+    }
+
+    return '/';
+  };
 
   return (
     <div className={styles.cards}>
@@ -18,11 +30,15 @@ const Cards: React.FC = () => {
           <div className={styles.cards_sections}>
             {cardGames.map((cardGame) => {
               return (
-                <Link key={cardGame.id} to={cardGame.href?.slice(1) ?? '/'}>
+                <Link
+                  key={cardGame.id}
+                  to={defineHref(cardGame)}
+                  className={styles.cards_sections_section}
+                >
                   <Card
                     title={cardGame.name}
                     image={cardGame.image}
-                    className={styles.cards_sections_section}
+                    className={styles.cards_sections_section_card}
                     imageClassName={styles.cards_sections_section_img}
                   />
                 </Link>

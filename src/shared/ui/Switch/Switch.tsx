@@ -13,7 +13,13 @@ const Switcher: React.FC<SwitcherProps> = ({ checked = false, onChange }) => {
     onChange?.(event.target.checked);
   };
 
-  return <Switch checked={_checked} onChange={handleChange} inputProps={{ 'aria-label': 'controlled' }} />;
+  return (
+    <Switch
+      checked={_checked}
+      onChange={handleChange}
+      inputProps={{ 'aria-label': 'controlled' }}
+    />
+  );
 };
 
 export default Switcher;

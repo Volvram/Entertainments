@@ -1,12 +1,19 @@
 @import "@/shared/styles/variables.scss";
 
 .cards {
-  margin-left: 10%;
-  margin-right: 10%;
-
   &_sections {
+    margin-left: 10%;
+    margin-right: 10%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
     &_section {
-      border-radius: 8px;
+      flex-basis: 33%;
+
+      &_card {
+        border-radius: 8px;
+      }
 
       &_img {
         border-top-left-radius: 8px;
@@ -22,6 +29,12 @@
     &_h {
       font-size: $h3;
       font-weight: 500;
+    }
+
+    &_sections {
+      &_section {
+        flex-basis: 100%;
+      }
     }
   }
 }

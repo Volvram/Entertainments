@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Block } from '@/entities/Block';
 import { useLazyFetchIpGeoQuery } from '@/pages/Ip/api/IpService.ts';
 import { useFetchOwnIpQuery } from '@/pages/Ip/api/OwnIpService.ts';
+import { ipHost } from '@/pages/Ip/config/hosts.ts';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
 
 import styles from './styles.module.scss';
-import { ipHost } from '@/pages/Ip/config/hosts.ts';
 
 const Ip: React.FC = () => {
   const [ip, setIp] = useState('');
@@ -20,7 +20,7 @@ const Ip: React.FC = () => {
       setIp(ownIp.ip);
       fetchIp(ownIp.ip);
     }
-  }, [ownIp]);
+  }, [fetchIp, ownIp]);
 
   const handleSearch = () => {
     fetchIp(ip);

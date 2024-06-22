@@ -45,7 +45,12 @@ const Drawer = forwardRef<CustomDrawerRefType, DrawerProps>(function Drawer(
   };
 
   return (
-    <SwipeableDrawer open={open} onOpen={handleOpen} onClose={handleClose} className={cn(styles.root, className)}>
+    <SwipeableDrawer
+      open={open}
+      onOpen={handleOpen}
+      onClose={handleClose}
+      className={cn(styles.root, className)}
+    >
       <WithCross onClose={handleClose}>{children}</WithCross>
     </SwipeableDrawer>
   );

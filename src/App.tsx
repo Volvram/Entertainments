@@ -5,8 +5,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Navigate, Route, Routes } from 'react-router';
 
 import { ImgButton } from '@/entities/ImgButton';
-import { useAppSelector } from '@/hooks/redux.ts';
-import { pages } from '@/pages/config/pages.ts';
+import { pages, PageType } from '@/pages/config/pages.ts';
+import { useAppSelector } from '@/shared/lib/hooks/redux.ts';
 import { CustomDrawerRefType } from '@/shared/ui/Drawer/types.ts';
 import { NavDrawer } from '@/widgets/NavDrawer';
 
@@ -19,6 +19,24 @@ function App() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  // Рекурсивная функция формирования роутов с учетом вложения
+  const renderRoutes = (pages: PageType<PageType<never>>[], basePath = '') => {
+    return pages.map((page) => {
+      const fullPath = `${basePath}${page.href}`.replace(/\/+/g, '/'); // Удаляем дублирующиеся слэши
+
+      if (page.nestedPages) {
+        return (
+          <Route key={page.id} path={fullPath} element={page.element && <page.element />}>
+            {renderRoutes(page.nestedPages, `${fullPath}`)}
+            <Route path='*' element={<Navigate to={fullPath} replace />} />
+          </Route>
+        );
+      }
+
+      return <Route key={page.id} path={fullPath} element={page.element && <page.element />} />;
+    });
+  };
+
   return (
     <>
       <NavDrawer forwardRef={menuDrawerRef} />
@@ -30,25 +48,7 @@ function App() {
         className='menu'
       />
       <Routes>
-        {pages.map((page) => {
-          if (page.nestedPages) {
-            return (
-              <Route key={page.id} path={page.href} element={<page.element />}>
-                {page.nestedPages.map((nestedPage) => {
-                  return (
-                    <Route
-                      key={nestedPage.id}
-                      path={`${page.href}/${nestedPage.href}`}
-                      element={<nestedPage.element />}
-                    />
-                  );
-                })}
-                <Route path='*' element={<Navigate to={page.href ?? '/'} replace />} />
-              </Route>
-            );
-          }
-          return <Route key={page.id} path={page.href} element={<page.element />} />;
-        })}
+        {renderRoutes(pages)}
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
     </>
