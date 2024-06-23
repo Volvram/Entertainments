@@ -1,4 +1,4 @@
-import { ThemeType } from '@/store/models/ThemeType.ts';
+import { ThemeType } from '@/store/types/ThemeType.ts';
 
 type ThemesType = {
   dark: ThemeType;

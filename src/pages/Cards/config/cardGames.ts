@@ -23,7 +23,7 @@ export const cardGames: CardGameType<CardGameType>[] = [
       {
         id: 'black-jack-game',
         name: 'Игра',
-        href: '/game',
+        href: '/game/:id',
         element: BlackJackGame,
       },
     ],

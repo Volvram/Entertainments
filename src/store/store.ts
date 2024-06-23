@@ -3,14 +3,18 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { ipApi } from '@/pages/Ip/api/IpService.ts';
 import { ownIpApi } from '@/pages/Ip/api/OwnIpService.ts';
 import { randomJokeApi } from '@/pages/RandomJokes/api/RandomJokeService.ts';
+import { cardsApi } from '@/shared/api/CardsService.ts';
 
+import cardsReducer from './reducers/CardsSlice.ts';
 import themeReducer from './reducers/ThemeSlice.ts';
 
 const rootReducer = combineReducers({
   themeReducer,
+  cardsReducer,
   [randomJokeApi.reducerPath]: randomJokeApi.reducer,
   [ownIpApi.reducerPath]: ownIpApi.reducer,
   [ipApi.reducerPath]: ipApi.reducer,
+  [cardsApi.reducerPath]: cardsApi.reducer,
 });
 
 export const setupStore = () => {
@@ -20,7 +24,8 @@ export const setupStore = () => {
       getDefaultMiddleware()
         .concat(randomJokeApi.middleware)
         .concat(ownIpApi.middleware)
-        .concat(ipApi.middleware),
+        .concat(ipApi.middleware)
+        .concat(cardsApi.middleware),
   });
 };
 
