@@ -1,10 +1,57 @@
 @import "@/shared/styles/variables.scss";
 
 .blackJackGame {
-  margin-top: 10px;
-  margin-left: 60px;
-  margin-right: 40px;
-  &_back {
+  min-height: 100vh;
+  //filter: brightness(50%);
+  //background: url("https://catherineasquithgallery.com/uploads/posts/2023-02/1676620936_catherineasquithgallery-com-p-temno-zelenii-fon-kartinki-1.jpg");
 
+  &_background {
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    min-height: 100vh;
+    filter: brightness(50%);
+    background: url("https://catherineasquithgallery.com/uploads/posts/2023-02/1676620936_catherineasquithgallery-com-p-temno-zelenii-fon-kartinki-1.jpg");
+  }
+
+  &_root {
+    margin-left: 60px;
+    margin-right: 40px;
+    padding-top: 10px;
+    filter: none;
+
+    &_back {
+    }
+
+    &_block {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 20px;
+
+      &_cards {
+        width: 100%;
+
+        &_img {
+          width: 100px;
+          height: 139px;
+
+          &:hover {
+            transform: translate(5px, -5px);
+            animation: hover-img 400ms ease-in-out;
+
+            @keyframes hover-img {
+              0% {
+                transform: translate(0, 0);
+              }
+              100% {
+                transform: translate(5px, -5px);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

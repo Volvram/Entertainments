@@ -1,9 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { cardsHost } from '@/shared/config/hosts.ts';
-import { ICreateDeckParams } from '@/shared/models/CreateDeckModel/ICreateDeckParams.ts';
-import { ICreateDeckResponse } from '@/shared/models/CreateDeckModel/ICreateDeckResponse.ts';
-import { IDeck } from '@/shared/models/DeckModel/IDeck.ts';
+import { ICreateDeckParams } from '@/shared/models/CardsModel/ICreateDeckParams.ts';
+import { ICreateDeckResponse } from '@/shared/models/CardsModel/ICreateDeckResponse.ts';
+import { IDeck } from '@/shared/models/CardsModel/IDeck.ts';
+import { IDrawCardsParams } from '@/shared/models/CardsModel/IDrawCardsParams.ts';
+import { IDrawCardsResponse } from '@/shared/models/CardsModel/IDrawCardsResponse.ts';
+import { IReshuffleCardsParams } from '@/shared/models/CardsModel/IReshuffleCardsParams.ts';
+import { IReshuffleCardsResponse } from '@/shared/models/CardsModel/IReshuffleCardsResponse.ts';
+import { IReturnCardsParams } from '@/shared/models/CardsModel/IReturnCardsParams.ts';
+import { IReturnCardsResponse } from '@/shared/models/CardsModel/IReturnCardsResponse.ts';
 
 export const cardsApi = createApi({
   reducerPath: 'cardsApi',
@@ -26,7 +32,38 @@ export const cardsApi = createApi({
         url: `/deck/${deckId}`,
       }),
     }),
+    drawCards: build.query<IDrawCardsResponse, IDrawCardsParams>({
+      query: (params) => ({
+        url: `/deck/${params.deckId}/draw`,
+        params: {
+          count: params.count ?? 1,
+        },
+      }),
+    }),
+    reshuffleCards: build.query<IReshuffleCardsResponse, IReshuffleCardsParams>({
+      query: (params) => ({
+        url: `/deck/${params.deckId}/shuffle`,
+        params: {
+          remaining: params.remaining,
+        },
+      }),
+    }),
+    returnCards: build.query<IReturnCardsResponse, IReturnCardsParams>({
+      query: (params) => ({
+        url: `/deck/${params.deckId}/return`,
+        params: {
+          cards: params.cards,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useLazyCreateDeckQuery, useRequestDeckQuery, useLazyRequestDeckQuery } = cardsApi;
+export const {
+  useLazyCreateDeckQuery,
+  useRequestDeckQuery,
+  useLazyRequestDeckQuery,
+  useLazyDrawCardsQuery,
+  useLazyReshuffleCardsQuery,
+  useLazyReturnCardsQuery,
+} = cardsApi;
