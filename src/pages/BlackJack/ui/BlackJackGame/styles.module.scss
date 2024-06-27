@@ -2,8 +2,6 @@
 
 .blackJackGame {
   min-height: 100vh;
-  //filter: brightness(50%);
-  //background: url("https://catherineasquithgallery.com/uploads/posts/2023-02/1676620936_catherineasquithgallery-com-p-temno-zelenii-fon-kartinki-1.jpg");
 
   &_background {
     position: absolute;
@@ -24,31 +22,49 @@
     &_back {
     }
 
-    &_block {
+    &_table {
       display: flex;
       align-items: center;
       flex-direction: column;
-      gap: 20px;
 
-      &_cards {
-        width: 100%;
+      &_bot {
+        &_score {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          font-size: $p1;
+        }
 
-        &_img {
-          width: 100px;
-          height: 139px;
+        &_cards {
+          min-height: 150px;
+          width: 100%;
+        }
+      }
 
-          &:hover {
-            transform: translate(5px, -5px);
-            animation: hover-img 400ms ease-in-out;
+      &_user {
+        margin-top: auto;
 
-            @keyframes hover-img {
-              0% {
-                transform: translate(0, 0);
-              }
-              100% {
-                transform: translate(5px, -5px);
-              }
-            }
+        &_cards {
+          position: relative;
+          min-height: 150px;
+          width: 100%;
+        }
+
+        &_score {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          font-size: $h2;
+        }
+
+        &_actions {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 50px;
+
+          &_button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            white-space: nowrap;
           }
         }
       }

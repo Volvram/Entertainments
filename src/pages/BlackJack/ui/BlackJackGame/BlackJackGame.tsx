@@ -1,16 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ImgButton } from '@/entities/ImgButton';
+import { PlayingCard } from '@/entities/PlayingCard';
+import { getCardsScore } from '@/pages/BlackJack/lib/utils/getCardsScore.ts';
 import {
   useLazyDrawCardsQuery,
   useLazyReshuffleCardsQuery,
-  useLazyReturnCardsQuery,
   useRequestDeckQuery,
 } from '@/shared/api/CardsService.ts';
 import { isFetchBaseQueryErrorType } from '@/shared/lib/utils/isFetchBaseQueryErrorType.ts';
+import { CardType } from '@/shared/types/CardType.ts';
 import { Button } from '@/shared/ui/Button';
 
 import styles from './styles.module.scss';
@@ -21,10 +23,35 @@ export const BlackJackGame: React.FC = () => {
   const { data: deck } = useRequestDeckQuery(id ?? '');
   const [drawCards, drawnCards] = useLazyDrawCardsQuery();
   const [reshuffleCards, reshuffled] = useLazyReshuffleCardsQuery();
-  const [returnCards, returned] = useLazyReturnCardsQuery();
 
-  const cardRef = useRef<HTMLImageElement | null>(null);
+  const [move, setMove] = useState<'bot' | 'user'>('bot');
 
+  const [botCards, setBotCards] = useState<CardType[]>([]);
+  const [userCards, setUserCards] = useState<CardType[]>([]);
+
+  useEffect(() => {
+    if (deck) {
+      handleDrawCards(2);
+    }
+
+    return handleReshuffleCards;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deck]);
+
+  // При переходе хода на бота он берет 2 карты
+  useEffect(() => {
+    handleDrawCards(2);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [move]);
+
+  // Передаем ход игроку спустя интервал времени
+  useEffect(() => {
+    setTimeout(() => {
+      setMove('user');
+    }, 1000);
+  }, [botCards]);
+
+  // Обработка ошибок при запросе карты
   useEffect(() => {
     if (drawnCards.isError) {
       if (isFetchBaseQueryErrorType(drawnCards.error)) {
@@ -35,16 +62,17 @@ export const BlackJackGame: React.FC = () => {
     }
   }, [drawnCards]);
 
+  // Добавлять карту пользователю, когда была запрошена новая
   useEffect(() => {
-    if (returned.isError) {
-      if (isFetchBaseQueryErrorType(returned.error)) {
-        alert(`Ошибка: ${returned.error.status}. Что-то пошло не так, попробуйте позже.`);
-      } else {
-        alert(returned.error);
-      }
+    if (!drawnCards.isLoading && drawnCards.data) {
+      move == 'bot'
+        ? setBotCards([...botCards, ...drawnCards.data.cards])
+        : setUserCards([...userCards, ...drawnCards.data.cards]);
     }
-  }, [returned]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drawnCards.data]);
 
+  // Обработка ошибок при перемешивании карт
   useEffect(() => {
     if (reshuffled.isError) {
       if (isFetchBaseQueryErrorType(reshuffled.error)) {
@@ -55,39 +83,45 @@ export const BlackJackGame: React.FC = () => {
     }
   }, [reshuffled]);
 
-  const handleDrawCards = () => {
+  const handleDrawCards = (count?: number) => {
     if (id) {
-      drawCards({ deckId: id });
-    }
-  };
-
-  const handleReturnCards = () => {
-    if (id) {
-      returnCards({ deckId: id });
+      drawCards({ deckId: id, count });
     }
   };
 
   const handleReshuffleCards = () => {
     if (id) {
       reshuffleCards({ deckId: id });
+      setUserCards([]);
+      setBotCards([]);
     }
   };
 
-  const receiveCard = () => {
-    cardRef.current?.animate(
-      [
-        {
-          transform: 'translate(-300%, -300%)',
-        },
-        {
-          transform: 'translate(0, 0)',
-        },
-      ],
-      {
-        duration: 500,
-        fill: 'forwards',
+  const handleCountResult = () => {
+    if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) > 21) {
+      alert('Вы победили!');
+    } else if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) <= 21) {
+      if (getCardsScore(userCards) > getCardsScore(botCards)) {
+        alert('Вы победили!');
+      } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
+        alert('Ничья');
+      } else {
+        alert('Вы проиграли');
       }
-    );
+    } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) <= 21) {
+      alert('Вы проиграли');
+    } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) > 21) {
+      if (getCardsScore(userCards) > getCardsScore(botCards)) {
+        alert('Вы проиграли');
+      } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
+        alert('Ничья');
+      } else {
+        alert('Вы победили!');
+      }
+    }
+
+    handleReshuffleCards();
+    setMove('bot');
   };
 
   return (
@@ -102,23 +136,56 @@ export const BlackJackGame: React.FC = () => {
           className={styles.blackJackGame_root_back}
         />
         Блэк-Джек Игра #{deck ? deck.deck_id : null}
-        <div className={styles.blackJackGame_root_block}>
-          <Button onClick={handleDrawCards}>Потянуть карту</Button>
+        <div className={styles.blackJackGame_root_table}>
+          <div className={styles.blackJackGame_root_table_bot}>
+            <div className={styles.blackJackGame_root_table_bot_score}>
+              Счет бота: {getCardsScore(botCards)}
+            </div>
 
-          <div className={styles.blackJackGame_root_block_cards}>
-            {drawnCards.data && (
-              <img
-                ref={cardRef}
-                src={drawnCards.data.cards[0].image}
-                onLoad={receiveCard}
-                className={styles.blackJackGame_root_block_cards_img}
-                alt={drawnCards.data.cards[0].code}
-              />
-            )}
+            <div className={styles.blackJackGame_root_table_bot_cards}>
+              {Boolean(botCards.length) &&
+                botCards.map((botCard) => {
+                  return <PlayingCard key={botCard.code} card={botCard} />;
+                })}
+            </div>
           </div>
 
-          <Button onClick={handleReturnCards}>Вернуть карты в колоду</Button>
-          <Button onClick={handleReshuffleCards}>Перемешать колоду</Button>
+          <div className={styles.blackJackGame_root_table_user}>
+            <div className={styles.blackJackGame_root_table_user_cards}>
+              {Boolean(userCards.length) &&
+                userCards.map((userCard) => {
+                  return (
+                    <PlayingCard
+                      key={userCard.code}
+                      card={userCard}
+                      className={styles.blackJackGame_root_table_user_cards_img}
+                    />
+                  );
+                })}
+            </div>
+
+            <div className={styles.blackJackGame_root_table_user_score}>
+              Ваш счет: <span style={{ color: 'yellow' }}>{getCardsScore(userCards)}</span>
+            </div>
+
+            <div className={styles.blackJackGame_root_table_user_actions}>
+              <Button
+                onClick={() => {
+                  handleDrawCards();
+                }}
+                className={styles.blackJackGame_root_table_user_actions_button}
+                disabled={getCardsScore(userCards) >= 21 || move != 'user'}
+              >
+                Потянуть карту
+              </Button>
+              <Button
+                onClick={handleCountResult}
+                className={styles.blackJackGame_root_table_user_actions_button}
+              >
+                Остановиться
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
