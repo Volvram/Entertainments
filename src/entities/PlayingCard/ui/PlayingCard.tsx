@@ -1,22 +1,49 @@
-import React, { useRef } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import cn from 'classnames';
 
+import { CustomPlayingCardRefType } from '@/entities/PlayingCard/types/CustomPlayingCardRefType.ts';
 import { CardType } from '@/shared/types/CardType.ts';
+import { FlippingCard } from '@/shared/ui/FlippingCard';
 
 import styles from './styles.module.scss';
 
 type PlayingCardProps = {
   card: CardType;
+  flipping?: boolean;
+  isFlipped?: boolean;
   onClick?: (ref: React.MutableRefObject<HTMLImageElement | null>) => void;
   className?: string;
 };
-const PlayingCard: React.FC<PlayingCardProps> = ({ card, onClick, className }) => {
+const PlayingCard = forwardRef<CustomPlayingCardRefType, PlayingCardProps>(function PlayingCard(
+  { card, flipping = true, isFlipped = false, onClick, className },
+  ref
+) {
   const cardRef = useRef<HTMLImageElement | null>(null);
+  const [_isFlipped, setIsFlipped] = useState(isFlipped);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      flip: () => {
+        setIsFlipped(!_isFlipped);
+      },
+    }),
+    []
+  );
+
+  useEffect(() => {
+    setIsFlipped(isFlipped);
+  }, [isFlipped]);
 
   const handleOnClick = () => {
     onClick?.(cardRef);
+
+    if (flipping) {
+      setIsFlipped(!_isFlipped);
+    }
   };
+
   const receiveCard = () => {
     cardRef.current?.animate(
       [
@@ -69,18 +96,34 @@ const PlayingCard: React.FC<PlayingCardProps> = ({ card, onClick, className }) =
   };
 
   return (
-    <img
+    <FlippingCard
       ref={cardRef}
-      key={card.code}
-      src={card.image}
+      isFlipped={_isFlipped}
       onClick={handleOnClick}
-      onLoad={receiveCard}
-      onMouseOver={hoverCard}
-      onMouseOut={unhoverCard}
-      className={cn(styles.playingCard, className)}
-      alt={card.code}
+      frontComponent={
+        <img
+          key={card.code}
+          src={card.image}
+          onLoad={receiveCard}
+          onMouseOver={hoverCard}
+          onMouseOut={unhoverCard}
+          className={cn(styles.playingCard, className)}
+          alt={card.code}
+        />
+      }
+      backComponent={
+        <img
+          key={card.code}
+          src='https://deckofcardsapi.com/static/img/back.png'
+          onLoad={receiveCard}
+          onMouseOver={hoverCard}
+          onMouseOut={unhoverCard}
+          className={cn(styles.playingCard, className)}
+          alt={card.code}
+        />
+      }
     />
   );
-};
+});
 
 export default PlayingCard;

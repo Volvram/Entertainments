@@ -27,6 +27,7 @@ export const BlackJackGame: React.FC = () => {
   const [move, setMove] = useState<'bot' | 'user'>('bot');
 
   const [botCards, setBotCards] = useState<CardType[]>([]);
+  const [secondBotCardClosed, setSecondBotCardClosed] = useState(true);
   const [userCards, setUserCards] = useState<CardType[]>([]);
 
   useEffect(() => {
@@ -50,6 +51,38 @@ export const BlackJackGame: React.FC = () => {
       setMove('user');
     }, 1000);
   }, [botCards]);
+
+  // Обработка подсчета результатов игры при открытии карты бота
+  useEffect(() => {
+    if (!secondBotCardClosed) {
+      setTimeout(() => {
+        if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) > 21) {
+          alert('Вы победили!');
+        } else if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) <= 21) {
+          if (getCardsScore(userCards) > getCardsScore(botCards)) {
+            alert('Вы победили!');
+          } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
+            alert('Ничья');
+          } else {
+            alert('Вы проиграли');
+          }
+        } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) <= 21) {
+          alert('Вы проиграли');
+        } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) > 21) {
+          if (getCardsScore(userCards) > getCardsScore(botCards)) {
+            alert('Вы проиграли');
+          } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
+            alert('Ничья');
+          } else {
+            alert('Вы победили!');
+          }
+        }
+
+        handleReshuffleCards();
+        setMove('bot');
+      }, 2000);
+    }
+  }, [secondBotCardClosed]);
 
   // Обработка ошибок при запросе карты
   useEffect(() => {
@@ -91,6 +124,7 @@ export const BlackJackGame: React.FC = () => {
 
   const handleReshuffleCards = () => {
     if (id) {
+      setSecondBotCardClosed(true);
       reshuffleCards({ deckId: id });
       setUserCards([]);
       setBotCards([]);
@@ -98,30 +132,7 @@ export const BlackJackGame: React.FC = () => {
   };
 
   const handleCountResult = () => {
-    if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) > 21) {
-      alert('Вы победили!');
-    } else if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) <= 21) {
-      if (getCardsScore(userCards) > getCardsScore(botCards)) {
-        alert('Вы победили!');
-      } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
-        alert('Ничья');
-      } else {
-        alert('Вы проиграли');
-      }
-    } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) <= 21) {
-      alert('Вы проиграли');
-    } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) > 21) {
-      if (getCardsScore(userCards) > getCardsScore(botCards)) {
-        alert('Вы проиграли');
-      } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
-        alert('Ничья');
-      } else {
-        alert('Вы победили!');
-      }
-    }
-
-    handleReshuffleCards();
-    setMove('bot');
+    setSecondBotCardClosed(false);
   };
 
   return (
@@ -139,13 +150,27 @@ export const BlackJackGame: React.FC = () => {
         <div className={styles.blackJackGame_root_table}>
           <div className={styles.blackJackGame_root_table_bot}>
             <div className={styles.blackJackGame_root_table_bot_score}>
-              Счет бота: {getCardsScore(botCards)}
+              Счет бота:{' '}
+              {secondBotCardClosed
+                ? `${getCardsScore(botCards.slice(0, 1))} + ?`
+                : `${getCardsScore(botCards)}`}
             </div>
 
             <div className={styles.blackJackGame_root_table_bot_cards}>
               {Boolean(botCards.length) &&
-                botCards.map((botCard) => {
-                  return <PlayingCard key={botCard.code} card={botCard} />;
+                botCards.map((botCard, index) => {
+                  if (index == 1) {
+                    return (
+                      <PlayingCard
+                        key={botCard.code}
+                        card={botCard}
+                        isFlipped={secondBotCardClosed}
+                        flipping={false}
+                      />
+                    );
+                  }
+
+                  return <PlayingCard key={botCard.code} card={botCard} flipping={false} />;
                 })}
             </div>
           </div>
@@ -158,6 +183,7 @@ export const BlackJackGame: React.FC = () => {
                     <PlayingCard
                       key={userCard.code}
                       card={userCard}
+                      flipping={false}
                       className={styles.blackJackGame_root_table_user_cards_img}
                     />
                   );

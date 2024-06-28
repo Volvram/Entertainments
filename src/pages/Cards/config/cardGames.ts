@@ -11,7 +11,7 @@ export const cardGames: CardGameType<CardGameType>[] = [
   {
     id: 'black-jack',
     name: 'Блэк-Джек',
-    image: 'https://stktara.ru/km/zamezkkxem/img523844.jpg_',
+    image: 'https://i.pinimg.com/736x/52/b5/e2/52b5e20a6313de8a6b8e9e4af22a63d5.jpg',
     href: '/black-jack',
     nestedPages: [
       {

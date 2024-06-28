@@ -2,6 +2,7 @@
 
 .blackJackGame {
   min-height: 100vh;
+  color: $white;
 
   &_background {
     position: absolute;
@@ -37,6 +38,10 @@
         &_cards {
           min-height: 150px;
           width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
         }
       }
 
@@ -44,9 +49,12 @@
         margin-top: auto;
 
         &_cards {
-          position: relative;
           min-height: 150px;
           width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
         }
 
         &_score {
