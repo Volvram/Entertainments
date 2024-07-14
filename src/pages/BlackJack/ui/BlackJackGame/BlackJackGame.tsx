@@ -11,6 +11,7 @@ import {
   useLazyReshuffleCardsQuery,
   useRequestDeckQuery,
 } from '@/shared/api/CardsService.ts';
+import { useLazyRunBlackJackNeuralNetworkQuery } from '@/shared/api/ServerService.ts';
 import { isFetchBaseQueryErrorType } from '@/shared/lib/utils/isFetchBaseQueryErrorType.ts';
 import { CardType } from '@/shared/types/CardType.ts';
 import { Button } from '@/shared/ui/Button';
@@ -23,6 +24,7 @@ export const BlackJackGame: React.FC = () => {
   const { data: deck } = useRequestDeckQuery(id ?? '');
   const [drawCards, drawnCards] = useLazyDrawCardsQuery();
   const [reshuffleCards, reshuffled] = useLazyReshuffleCardsQuery();
+  const [runNeuralNetwork, neuralNetwork] = useLazyRunBlackJackNeuralNetworkQuery();
 
   const [move, setMove] = useState<'bot' | 'user'>('bot');
 
@@ -30,27 +32,77 @@ export const BlackJackGame: React.FC = () => {
   const [secondBotCardClosed, setSecondBotCardClosed] = useState(true);
   const [userCards, setUserCards] = useState<CardType[]>([]);
 
+  // Возвращаем карты в колоду и перемешиваем при новой игре
   useEffect(() => {
-    if (deck) {
-      handleDrawCards(2);
-    }
+    // Бот тянет 2 начальные карты
+    handleDrawCards(2);
+    // Передаем ход игроку спустя интервал времени
+    setTimeout(() => {
+      setMove('user');
+    }, 1000);
 
     return handleReshuffleCards;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deck]);
 
-  // При переходе хода на бота он берет 2 карты
+  // При переходе хода на игрока берутся 2 начальные карты, при втором переходе на бота запускается нейронная сеть
   useEffect(() => {
-    handleDrawCards(2);
+    if (move == 'user') {
+      handleDrawCards(2);
+    } else {
+      if (botCards.length) {
+        const botCardsParams = {
+          sum: getCardsScore(userCards),
+          openedCard: botCards[0].value,
+        };
+
+        runNeuralNetwork(botCardsParams);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [move]);
 
-  // Передаем ход игроку спустя интервал времени
+  // Добавлять запрошенные новые карты тому, чей ход
   useEffect(() => {
-    setTimeout(() => {
-      setMove('user');
-    }, 1000);
-  }, [botCards]);
+    if (!drawnCards.isLoading && drawnCards.data) {
+      move == 'bot'
+        ? setBotCards([...botCards, ...drawnCards.data.cards])
+        : setUserCards([...userCards, ...drawnCards.data.cards]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drawnCards.data]);
+
+  useEffect(() => {
+    if (neuralNetwork.data) {
+      // Элемент случайности действий нейронной сети
+      const chance = Math.random();
+
+      // Является ли взятие новой карты менее вероятным событием
+      const shouldTake = neuralNetwork.data.take < neuralNetwork.data.stay;
+
+      if (shouldTake) {
+        // Если решается вопрос взятия карты и шанс выпал в пределах взятия новой карты
+        if (chance < Math.min(neuralNetwork.data.take, neuralNetwork.data.stay)) {
+          handleDrawCards();
+        }
+      } else {
+        // Если решается вопрос остановки и шанс НЕ выпал в пределах остановки
+        if (!(chance < Math.min(neuralNetwork.data.take, neuralNetwork.data.stay))) {
+          handleDrawCards();
+        }
+      }
+
+      // Через некоторое время запустить проверку результата
+      setTimeout(() => {
+        setSecondBotCardClosed(false);
+      }, 1000);
+    }
+
+    // Обработка ошибки получения данных нейронной сети
+    if (neuralNetwork.isError) {
+      setSecondBotCardClosed(false);
+    }
+  }, [neuralNetwork]);
 
   // Обработка подсчета результатов игры при открытии карты бота
   useEffect(() => {
@@ -78,8 +130,7 @@ export const BlackJackGame: React.FC = () => {
           }
         }
 
-        handleReshuffleCards();
-        setMove('bot');
+        window.location.reload();
       }, 2000);
     }
   }, [secondBotCardClosed]);
@@ -94,16 +145,6 @@ export const BlackJackGame: React.FC = () => {
       }
     }
   }, [drawnCards]);
-
-  // Добавлять карту пользователю, когда была запрошена новая
-  useEffect(() => {
-    if (!drawnCards.isLoading && drawnCards.data) {
-      move == 'bot'
-        ? setBotCards([...botCards, ...drawnCards.data.cards])
-        : setUserCards([...userCards, ...drawnCards.data.cards]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drawnCards.data]);
 
   // Обработка ошибок при перемешивании карт
   useEffect(() => {
@@ -132,7 +173,7 @@ export const BlackJackGame: React.FC = () => {
   };
 
   const handleCountResult = () => {
-    setSecondBotCardClosed(false);
+    setMove('bot');
   };
 
   return (
