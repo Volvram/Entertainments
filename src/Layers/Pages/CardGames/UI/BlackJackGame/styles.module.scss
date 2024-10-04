@@ -1,0 +1,81 @@
+@import "../../../../Shared/styles/variables";
+
+.blackJackGame {
+  min-height: 100vh;
+  color: $white;
+
+  &_background {
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    min-height: 100vh;
+    filter: brightness(50%);
+    background: url("https://catherineasquithgallery.com/uploads/posts/2023-02/1676620936_catherineasquithgallery-com-p-temno-zelenii-fon-kartinki-1.jpg");
+  }
+
+  &_root {
+    margin-left: 60px;
+    margin-right: 40px;
+    padding-top: 10px;
+    filter: none;
+
+    &_back {
+    }
+
+    &_table {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      &_bot {
+        &_score {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          font-size: $p1;
+        }
+
+        &_cards {
+          min-height: 150px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+        }
+      }
+
+      &_user {
+        margin-top: auto;
+
+        &_cards {
+          min-height: 150px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+        }
+
+        &_score {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          font-size: $h2;
+        }
+
+        &_actions {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 50px;
+
+          &_button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+}
