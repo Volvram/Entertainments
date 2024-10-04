@@ -1,4 +1,4 @@
-@import "@/shared/styles/variables.scss";
+@import "@/Layers/Shared/styles/variables";
 
 .ip {
   margin-left: 10%;
@@ -21,6 +21,8 @@
   }
 
   &_geo {
+    padding: 10px;
+    border: 1px solid var(--rj-border-color);
     display: flex;
     flex-direction: column;
     align-items: flex-start;

@@ -1,21 +1,14 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import cn from 'classnames';
 
-import { CustomPlayingCardRefType } from '@/Layers/Entities/PlayingCard/UI/Types.ts';
-import { CardType } from '@/Layers/Shared/types/CardType.ts';
-import { FlippingCard } from '@/Layers/Shared/ui/FlippingCard';
 
 import styles from './styles.module.scss';
+import { CARD_BACK_IMAGE } from '../../consts/cardBackImage.ts';
+import { CustomPlayingCardRefType, TPlayingCard } from '../../UI/PlayingCard/Types.ts';
+import { FlippingCard } from '@/Layers/Shared/UI/FlippingCard';
 
-type PlayingCardProps = {
-  card: CardType;
-  flipping?: boolean;
-  isFlipped?: boolean;
-  onClick?: (ref: React.MutableRefObject<HTMLImageElement | null>) => void;
-  className?: string;
-};
-const PlayingCard = forwardRef<CustomPlayingCardRefType, PlayingCardProps>(function PlayingCard(
+export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(function PlayingCard(
   { card, flipping = true, isFlipped = false, onClick, className },
   ref
 ) {
@@ -114,7 +107,7 @@ const PlayingCard = forwardRef<CustomPlayingCardRefType, PlayingCardProps>(funct
       backComponent={
         <img
           key={card.code}
-          src='https://deckofcardsapi.com/static/img/back.png'
+          src={CARD_BACK_IMAGE}
           onLoad={receiveCard}
           onMouseOver={hoverCard}
           onMouseOut={unhoverCard}
@@ -125,5 +118,3 @@ const PlayingCard = forwardRef<CustomPlayingCardRefType, PlayingCardProps>(funct
     />
   );
 });
-
-export default PlayingCard;

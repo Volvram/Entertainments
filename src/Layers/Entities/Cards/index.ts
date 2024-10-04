@@ -1,1 +1,1 @@
-export { default as PlayingCard } from './ui/PlayingCard.tsx';
+export { PlayingCard } from './UI/PlayingCard/PlayingCard.tsx';

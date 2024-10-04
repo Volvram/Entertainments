@@ -1,20 +1,15 @@
 import React from 'react';
 
-import { Section } from '@/Layers/Entities/Section';
-import { SectionType } from '@/Layers/Entities/Section/types/SectionType.ts';
-
 import styles from './styles.module.scss';
+import { TSectionsList } from '../../UI/SectionsList/Types.ts';
+import { SectionItem } from '../SectionItem/SectionItem.tsx';
 
-type SectionsListProps = {
-  sections: SectionType[];
-  onSectionClick?: () => void;
-};
-const SectionsList: React.FC<SectionsListProps> = ({ sections, onSectionClick }) => {
+export const SectionsList: React.FC<TSectionsList> = ({ sections, onSectionClick }) => {
   return (
     <div className={styles.root}>
       {sections.map((section) => {
         return (
-          <Section
+          <SectionItem
             key={section.id}
             section={section}
             onClick={onSectionClick}
@@ -25,5 +20,3 @@ const SectionsList: React.FC<SectionsListProps> = ({ sections, onSectionClick })
     </div>
   );
 };
-
-export default SectionsList;

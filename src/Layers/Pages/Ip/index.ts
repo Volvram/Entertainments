@@ -1,1 +1,1 @@
-export { default as Ip } from './ui/Ip.tsx';
+export { Ip } from './UI/Ip.tsx';

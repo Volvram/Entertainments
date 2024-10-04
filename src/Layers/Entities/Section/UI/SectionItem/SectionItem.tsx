@@ -3,16 +3,11 @@ import React from 'react';
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
 
-import { SectionType } from '@/Layers/Entities/Section/types/SectionType.ts';
+import { TSectionItem } from '@/Layers/Entities/Section/UI/SectionItem/Types.ts';
 
 import styles from './styles.module.scss';
 
-type SectionProps = {
-  section: SectionType;
-  onClick?: () => void;
-  className?: string;
-};
-const Section: React.FC<SectionProps> = ({ section, onClick, className }) => {
+export const SectionItem: React.FC<TSectionItem> = ({ section, onClick, className }) => {
   return (
     <div>
       {section.href ? (
@@ -32,5 +27,3 @@ const Section: React.FC<SectionProps> = ({ section, onClick, className }) => {
     </div>
   );
 };
-
-export default Section;

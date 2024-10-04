@@ -1,1 +1,1 @@
-export { default as WithCross } from './WithCross.tsx';
+export { WithCross } from './WithCross.tsx';

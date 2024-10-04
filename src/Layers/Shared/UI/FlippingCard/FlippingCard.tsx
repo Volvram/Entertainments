@@ -1,21 +1,12 @@
-import { forwardRef, ReactNode, useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 
 import cn from 'classnames';
 import ReactCardFlip from 'react-card-flip';
 
 import styles from './styles.module.scss';
+import { TFlippingCard } from './Types';
 
-type FlippingCardProps = {
-  frontComponent: ReactNode;
-  backComponent: ReactNode;
-  isFlipped?: boolean;
-  onChange?: (value: boolean) => void;
-  onClick?: () => void;
-  flipDirection?: 'vertical' | 'horizontal';
-  className?: string;
-};
-
-export const FlippingCard = forwardRef<HTMLDivElement, FlippingCardProps>(function FlippingCard(
+export const FlippingCard = forwardRef<HTMLDivElement, TFlippingCard>(function FlippingCard(
   {
     frontComponent,
     backComponent,

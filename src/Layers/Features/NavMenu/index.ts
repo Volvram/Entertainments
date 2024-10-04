@@ -1,1 +1,1 @@
-export { default as NavMenu } from './ui/NavMenu.tsx';
+export { NavMenu } from './UI/NavMenu.tsx';

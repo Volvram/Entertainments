@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { getCardGames } from '@/Layers/Shared/lib/utils/getCardGames.ts';
-import { CardsType } from '@/store/types/CardsType.ts';
+import { getCardGames } from '@/Layers/Shared/lib/helpers/getCardGames.ts';
+import { CardsType } from '@/Layers/Pages/CardGames/UI/CardGames/Types.ts';
 
 interface CardsState {
   cards: CardsType;

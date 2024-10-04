@@ -1,1 +1,1 @@
-export { default as Drawer } from './Drawer.tsx';
+export { Drawer } from './Drawer.tsx';

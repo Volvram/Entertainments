@@ -3,15 +3,9 @@ import React from 'react';
 import cn from 'classnames';
 
 import styles from './styles.module.scss';
+import { TButton } from './Types.ts';
 
-export type ButtonProps = React.PropsWithChildren<{
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  className?: string;
-  disabled?: boolean;
-}> &
-  React.ButtonHTMLAttributes<HTMLButtonElement>;
-
-export const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<TButton> = ({
   children,
   onClick,
   className,

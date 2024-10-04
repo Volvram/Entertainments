@@ -1,24 +1,27 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { cardsHost } from '@/Layers/Shared/config/hosts.ts';
-import { ICreateDeckParams } from '@/Layers/Shared/models/CardsModel/ICreateDeckParams.ts';
-import { ICreateDeckResponse } from '@/Layers/Shared/models/CardsModel/ICreateDeckResponse.ts';
-import { IDeck } from '@/Layers/Shared/models/CardsModel/IDeck.ts';
-import { IDrawCardsParams } from '@/Layers/Shared/models/CardsModel/IDrawCardsParams.ts';
-import { IDrawCardsResponse } from '@/Layers/Shared/models/CardsModel/IDrawCardsResponse.ts';
-import { IReshuffleCardsParams } from '@/Layers/Shared/models/CardsModel/IReshuffleCardsParams.ts';
-import { IReshuffleCardsResponse } from '@/Layers/Shared/models/CardsModel/IReshuffleCardsResponse.ts';
-import { IReturnCardsParams } from '@/Layers/Shared/models/CardsModel/IReturnCardsParams.ts';
-import { IReturnCardsResponse } from '@/Layers/Shared/models/CardsModel/IReturnCardsResponse.ts';
+import {
+  ICreateDeckRequest,
+  ICreateDeckResponse,
+  IRequestDeckResponse,
+  IDrawCardsRequest,
+  IDrawCardsResponse,
+  IReshuffleCardsRequest,
+  IReshuffleCardsResponse,
+  IReturnCardsRequest,
+  IReturnCardsResponse,
+  TRequestDeckRequest,
+} from './Types.ts';
+import { CARDS_HOST } from '../../lib/consts/hosts.ts';
 
 export const cardsApi = createApi({
   reducerPath: 'cardsApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${cardsHost}/api`,
+    baseUrl: `${CARDS_HOST}/api`,
   }),
   endpoints: (build) => ({
-    createDeck: build.query<ICreateDeckResponse, ICreateDeckParams | void>({
-      query: (params: ICreateDeckParams) => ({
+    createDeck: build.query<ICreateDeckResponse, ICreateDeckRequest | void>({
+      query: (params: ICreateDeckRequest) => ({
         url: `/deck/new${params.shuffle ? '/shuffle' : ''}`,
         params: {
           deck_count: params.deckCount,
@@ -27,12 +30,12 @@ export const cardsApi = createApi({
         },
       }),
     }),
-    requestDeck: build.query<IDeck, string>({
+    requestDeck: build.query<IRequestDeckResponse, TRequestDeckRequest>({
       query: (deckId) => ({
         url: `/deck/${deckId}`,
       }),
     }),
-    drawCards: build.query<IDrawCardsResponse, IDrawCardsParams>({
+    drawCards: build.query<IDrawCardsResponse, IDrawCardsRequest>({
       query: (params) => ({
         url: `/deck/${params.deckId}/draw`,
         params: {
@@ -40,7 +43,7 @@ export const cardsApi = createApi({
         },
       }),
     }),
-    reshuffleCards: build.query<IReshuffleCardsResponse, IReshuffleCardsParams>({
+    reshuffleCards: build.query<IReshuffleCardsResponse, IReshuffleCardsRequest>({
       query: (params) => ({
         url: `/deck/${params.deckId}/shuffle`,
         params: {
@@ -48,7 +51,7 @@ export const cardsApi = createApi({
         },
       }),
     }),
-    returnCards: build.query<IReturnCardsResponse, IReturnCardsParams>({
+    returnCards: build.query<IReturnCardsResponse, IReturnCardsRequest>({
       query: (params) => ({
         url: `/deck/${params.deckId}/return`,
         params: {

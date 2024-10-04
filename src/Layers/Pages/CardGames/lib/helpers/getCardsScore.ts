@@ -1,6 +1,7 @@
-import { getCardValue } from '@/Layers/Pages/BlackJack/lib/utils/getCardValue.ts';
-import { isPlayingCardScoresKeyType } from '@/Layers/Pages/BlackJack/lib/utils/isPlayingCardScoresKeyType.ts';
 import { TCard } from '@/Layers/Shared/api/cards/Types.ts';
+
+import { getCardValue } from './getCardValue.ts';
+import { isPlayingCardScoresKeyType } from './isPlayingCardScoresKeyType.ts';
 
 export const getCardsScore = (cards: TCard[]) => {
   let score = 0;

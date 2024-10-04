@@ -1,15 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { ownIpHost } from '@/Layers/Pages/Ip/config/hosts.ts';
-import { IOwnIp } from '@/Layers/Pages/Ip/models/IOwnIp.ts';
+import { IOwnIpResponse, TOwnIpRequest } from './Types.ts';
+import { OWN_IP_HOST } from '../../lib/consts/IpHosts.ts';
 
 export const ownIpApi = createApi({
   reducerPath: 'ownIpApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: ownIpHost,
+    baseUrl: OWN_IP_HOST,
   }),
   endpoints: (build) => ({
-    fetchOwnIp: build.query<IOwnIp, string | void>({
+    fetchOwnIp: build.query<IOwnIpResponse, TOwnIpRequest>({
       query: (format = 'json') => ({
         url: '/',
         params: {

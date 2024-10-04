@@ -1,13 +1,8 @@
-import React from 'react';
+import { BlackJackGame } from '../../UI/BlackJackGame/BlackJackGame';
+import { BlackJackMenu } from '../../UI/BlackJackMenu/BlackJackMenu';
+import { TCardGame } from '../../UI/CardGames/Types';
 
-import { SectionType } from '@/Layers/Entities/Section/types/SectionType.ts';
-import { BlackJackGame, BlackJackMenu } from '@/Layers/Pages/BlackJack';
-
-export type CardGameType<Nested = any> = SectionType & {
-  element?: React.FC;
-  nestedPages?: Nested[];
-};
-export const cardGames: CardGameType<CardGameType>[] = [
+export const CARD_GAMES: TCardGame<TCardGame>[] = [
   {
     id: 'black-jack',
     name: 'Блэк-Джек',

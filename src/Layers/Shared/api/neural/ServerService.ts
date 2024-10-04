@@ -1,18 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { serverHost } from '@/Layers/Shared/config/hosts.ts';
-import { IRunBlackJackNeuralNetworkParams } from '@/Layers/Shared/models/ServerModel/IRunBlackJackNeuralNetworkParams.ts';
-import { IRunBlackJackNeuralNetworkResponse } from '@/Layers/Shared/models/ServerModel/IRunBlackJackNeuralNetworkResponse.ts';
+import { IRunBlackJackNeuralNetworkRequest, IRunBlackJackNeuralNetworkResponse } from './Types.ts';
+import { SERVER_HOST } from '../../lib/consts/hosts.ts';
 
 export const serverApi = createApi({
   reducerPath: 'serverApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: serverHost,
+    baseUrl: SERVER_HOST,
   }),
   endpoints: (build) => ({
     runBlackJackNeuralNetwork: build.query<
       IRunBlackJackNeuralNetworkResponse,
-      IRunBlackJackNeuralNetworkParams
+      IRunBlackJackNeuralNetworkRequest
     >({
       query: (params) => ({
         url: '/black-jack-network',

@@ -2,15 +2,16 @@ import React from 'react';
 
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
-import { cardGames, CardGameType } from '@/Layers/Pages/CardGames/lib/consts/cardGames.ts';
 import { Card } from '@/Layers/Shared/UI/Card';
 
 import styles from './styles.module.scss';
+import { CARD_GAMES } from '../../lib/consts/cardGames.ts';
+import { TCardGame } from '../../UI/CardGames/Types.ts';
 
-const CardGames: React.FC = () => {
+export const CardGames: React.FC = () => {
   const { pathname } = useLocation();
 
-  const defineHref = (cardGame: CardGameType<CardGameType<any>>) => {
+  const defineHref = (cardGame: TCardGame<TCardGame<any>>) => {
     if (cardGame.href) {
       if (cardGame.element) {
         return cardGame.href.slice(1);
@@ -24,11 +25,11 @@ const CardGames: React.FC = () => {
 
   return (
     <div className={styles.cards}>
-      {pathname == '/cards' ? (
+      {pathname === '/cards' ? (
         <div>
           <h2 className={styles.cards_h}>Выберите карточную игру</h2>
           <div className={styles.cards_sections}>
-            {cardGames.map((cardGame) => {
+            {CARD_GAMES.map((cardGame) => {
               return (
                 <Link
                   key={cardGame.id}
@@ -52,5 +53,3 @@ const CardGames: React.FC = () => {
     </div>
   );
 };
-
-export default CardGames;

@@ -2,23 +2,11 @@ import React, { forwardRef, useCallback, useEffect, useRef } from 'react';
 
 import cn from 'classnames';
 
+import { TInput } from '@/Layers/Shared/UI/Input/Types.ts';
+
 import styles from './styles.module.scss';
 
-type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> & {
-  /** Значение поля */
-  value?: string | string[];
-  /** Callback, вызываемый при вводе данных в поле */
-  onChange: ((value: string | string[]) => void) | ((value: string) => void);
-  onEnterClick?: (value: string | string[]) => void;
-  className?: string;
-  containerClassName?: string;
-  disabled?: boolean;
-  icon?: string;
-  iconAlt?: string;
-  onIconClick?: () => void;
-};
-
-export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+export const Input = forwardRef<HTMLInputElement, TInput>(function Input(
   {
     value = '',
     onChange,

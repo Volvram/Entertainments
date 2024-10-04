@@ -1,1 +1,1 @@
-export { default as Switch } from './Switch.tsx';
+export { default as Switch } from './Switcher.tsx';

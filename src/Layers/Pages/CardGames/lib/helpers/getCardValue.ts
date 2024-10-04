@@ -1,4 +1,4 @@
-import { playingCardScores } from '@/Layers/Pages/BlackJack/config/playingCardScores.ts';
+import { PLAYING_CARD_SCORES } from '../consts/playingCardScores.ts';
 
 type CardValueType = {
   value: number;
@@ -6,25 +6,25 @@ type CardValueType = {
 };
 
 export const getCardValue = (
-  cardValue: keyof typeof playingCardScores,
+  cardValue: keyof typeof PLAYING_CARD_SCORES,
   generalScore: number = 0
 ): CardValueType => {
-  if (cardValue == 'ACE') {
+  if (cardValue === 'ACE') {
     if (generalScore > 10) {
       return {
-        value: playingCardScores[cardValue][1],
+        value: PLAYING_CARD_SCORES[cardValue][1],
         uncountedAce: false,
       };
     }
 
     return {
-      value: playingCardScores[cardValue][0],
+      value: PLAYING_CARD_SCORES[cardValue][0],
       uncountedAce: true,
     };
   }
 
   return {
-    value: playingCardScores[cardValue],
+    value: PLAYING_CARD_SCORES[cardValue],
     uncountedAce: false,
   };
 };

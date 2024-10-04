@@ -1,4 +1,4 @@
-@import "@/shared/styles/variables.scss";
+@import "@/Layers/Shared/styles/variables";
 
 // src/index.scss
 :root {
@@ -36,17 +36,3 @@ a {
 a:hover {
   color: var(--body-color-hovered)
 }
-
-
-//
-//@media (prefers-color-scheme: light) {
-//  :root {
-//    color: $white;
-//  }
-//  a:hover {
-//    color: #747bff;
-//  }
-//  button {
-//    background-color: #f9f9f9;
-//  }
-//}

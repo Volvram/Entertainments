@@ -1,1 +1,1 @@
-export { default as RandomJokes } from './ui/RandomJokes.tsx';
+export { RandomJokes } from './UI/RandomJokes.tsx';

@@ -1,1 +1,1 @@
-export { default as ImgButton } from './ui/ImgButton.tsx';
+export { ImgButton } from '@/Layers/Entities/ImgButton/UI/ImgButton.tsx';

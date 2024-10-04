@@ -1,1 +1,1 @@
-export { default as NavDrawer } from './ui/NavDrawer.tsx';
+export { NavDrawer } from './UI/NavDrawer.tsx';

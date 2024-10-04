@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
-import { Block } from '@/entities/Block';
-import { useLazyFetchIpGeoQuery } from '@/pages/Ip/api/IpService.ts';
-import { useFetchOwnIpQuery } from '@/pages/Ip/api/OwnIpService.ts';
-import { ipHost } from '@/pages/Ip/config/hosts.ts';
-import { Button } from '@/shared/ui/Button';
-import { Input } from '@/shared/ui/Input';
+import { Button } from '@/Layers/Shared/UI/Button';
+import { Input } from '@/Layers/Shared/UI/Input';
 
 import styles from './styles.module.scss';
+import { useLazyFetchIpGeoQuery } from '../api/ip/IpService.ts';
+import { useFetchOwnIpQuery } from '../api/ownIp/OwnIpService.ts';
+import { IP_HOST } from '../lib/consts/IpHosts.ts';
 
-const Ip: React.FC = () => {
+export const Ip: React.FC = () => {
   const [ip, setIp] = useState('');
 
   const { data: ownIp, error: ownIpError, isLoading: isLoadingOwnIp } = useFetchOwnIpQuery();
@@ -48,7 +47,7 @@ const Ip: React.FC = () => {
     }
 
     if (ipGeo.isLoading || !ipGeo.data) {
-      return <div>Данные IP-адреса ищутся...</div>;
+      return <div className={styles.ip_geo}>Данные IP-адреса ищутся...</div>;
     } else {
       return (
         <div className={styles.ip_geo}>
@@ -62,8 +61,8 @@ const Ip: React.FC = () => {
           <div>Часовой пояс: {ipGeo.data.timezone}</div>
           <div>
             Подробнее на:{' '}
-            <a href={`${ipHost}/${ipGeo.data.ip}`} className={styles.ip_geo_link}>
-              {`${ipHost}/${ipGeo.data.ip}`}
+            <a href={`${IP_HOST}/${ipGeo.data.ip}`} className={styles.ip_geo_link}>
+              {`${IP_HOST}/${ipGeo.data.ip}`}
             </a>
           </div>
         </div>
@@ -83,9 +82,7 @@ const Ip: React.FC = () => {
         />
         <Button onClick={handleSearch}>Найти</Button>
       </div>
-      <Block>{renderIpGeo()}</Block>
+      <div>{renderIpGeo()}</div>
     </div>
   );
 };
-
-export default Ip;

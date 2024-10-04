@@ -1,13 +1,12 @@
 import React from 'react';
 
-import SectionsList from '@/entities/SectionsList/ui/SectionsList.tsx';
-import { navMenuSections } from '@/features/NavMenu/config/navMenuSections.ts';
+import { SectionsList } from '@/Layers/Entities/Section/UI/SectionsList/SectionsList.tsx';
+
+import { NAV_MENU_SECTIONS } from '../lib/consts/navMenuSections.ts';
 
 type NavMenuProps = {
   onChange?: () => void;
 };
-const NavMenu: React.FC<NavMenuProps> = ({ onChange }) => {
-  return <SectionsList sections={navMenuSections} onSectionClick={onChange} />;
+export const NavMenu: React.FC<NavMenuProps> = ({ onChange }) => {
+  return <SectionsList sections={NAV_MENU_SECTIONS} onSectionClick={onChange} />;
 };
-
-export default NavMenu;

@@ -1,22 +1,16 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 
 import './MUI.scss';
 
 import { SwipeableDrawer } from '@mui/material';
 import cn from 'classnames';
 
-import { WithCross } from '@/Layers/Shared/ui/WithCross';
+import { WithCross } from '@/Layers/Shared/UI/WithCross';
 
 import styles from './styles.module.scss';
-import { CustomDrawerRefType } from './types.ts';
+import { CustomDrawerRefType, TDrawer } from './Types.ts';
 
-type DrawerProps = React.PropsWithChildren<{
-  onOpen?: () => void;
-  onClose?: () => void;
-  className?: string;
-}>;
-
-const Drawer = forwardRef<CustomDrawerRefType, DrawerProps>(function Drawer(
+export const Drawer = forwardRef<CustomDrawerRefType, TDrawer>(function Drawer(
   { onOpen, onClose, className, children },
   ref
 ) {
@@ -55,5 +49,3 @@ const Drawer = forwardRef<CustomDrawerRefType, DrawerProps>(function Drawer(
     </SwipeableDrawer>
   );
 });
-
-export default Drawer;

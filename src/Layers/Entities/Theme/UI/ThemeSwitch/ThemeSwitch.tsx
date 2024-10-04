@@ -4,9 +4,10 @@ import { FormControlLabel, FormGroup } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 
-import { themes } from '@/Layers/Shared/lib/consts/themes.ts';
 import { useAppDispatch, useAppSelector } from '@/Layers/App/ConfigureRTK/hooks.ts';
-import { themeSlice } from '@/Layers/Entities/Theme/model/ThemeSlice.ts';
+
+import { themeSlice } from '../../model/ThemeSlice.ts';
+import { ETheme } from '../../UI/ThemeSwitch/Types.ts';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -55,17 +56,22 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const ThemeSwitch: React.FC = () => {
+export const ThemeSwitch: React.FC = () => {
   const { theme } = useAppSelector((state) => state.themeReducer);
   const { set } = themeSlice.actions;
   const dispatch = useAppDispatch();
 
-  const [_checked, setChecked] = React.useState(theme == 'dark');
+  const [_checked, setChecked] = React.useState(theme === ETheme.dark);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
-    if (theme === themes.light) dispatch(set(themes.dark));
-    if (theme === themes.dark) dispatch(set(themes.light));
+    if (theme === ETheme.light) {
+      dispatch(set(ETheme.dark));
+    }
+
+    if (theme === ETheme.dark) {
+      dispatch(set(ETheme.light));
+    }
   };
 
   return (
@@ -77,5 +83,3 @@ const ThemeSwitch: React.FC = () => {
     </FormGroup>
   );
 };
-
-export default ThemeSwitch;

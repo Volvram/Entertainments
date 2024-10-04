@@ -1,3 +1,5 @@
-export interface IOwnIp {
+export interface IOwnIpResponse {
   ip: string;
 }
+
+export type TOwnIpRequest = string | void;

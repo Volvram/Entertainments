@@ -3,12 +3,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/Layers/App/ConfigureRTK/hooks.ts';
+import { CardsSlice } from '@/Layers/Entities/Cards/model/Cards/CardsSlice.ts';
 import {
   useLazyCreateDeckQuery,
   useLazyRequestDeckQuery,
 } from '@/Layers/Shared/api/cards/CardsService.ts';
-import { Button } from 'src/Layers/Shared/UI/Button';
-import { CardsSlice } from '@/Layers/Entities/Cards/model/Cards/CardsSlice.ts';
+import { Button } from '@/Layers/Shared/UI/Button';
 
 import styles from './styles.module.scss';
 

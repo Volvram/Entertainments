@@ -3,10 +3,8 @@ import React, { useEffect, useState } from 'react';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import styles from './styles.module.scss';
 import { PlayingCard } from '@/Layers/Entities/Cards';
 import { ImgButton } from '@/Layers/Entities/ImgButton';
-import { getCardsScore } from '@/Layers/Pages/BlackJack/lib/utils/getCardsScore.ts';
 import {
   useLazyDrawCardsQuery,
   useLazyReshuffleCardsQuery,
@@ -15,7 +13,11 @@ import {
 import { TCard } from '@/Layers/Shared/api/cards/Types.ts';
 import { useLazyRunBlackJackNeuralNetworkQuery } from '@/Layers/Shared/api/neural/ServerService.ts';
 import { isFetchBaseQueryErrorType } from '@/Layers/Shared/lib/helpers/isFetchBaseQueryErrorType.ts';
-import { Button } from 'src/Layers/Shared/UI/Button';
+import { Button } from '@/Layers/Shared/UI/Button';
+
+import styles from './styles.module.scss';
+import { EWhoseMove, TWhoseMove } from './Types.ts';
+import { getCardsScore } from '../../lib/helpers/getCardsScore.ts';
 
 export const BlackJackGame: React.FC = () => {
   const navigate = useNavigate();
@@ -25,7 +27,7 @@ export const BlackJackGame: React.FC = () => {
   const [reshuffleCards, reshuffled] = useLazyReshuffleCardsQuery();
   const [runNeuralNetwork, neuralNetwork] = useLazyRunBlackJackNeuralNetworkQuery();
 
-  const [move, setMove] = useState<'bot' | 'user'>('bot');
+  const [move, setMove] = useState<TWhoseMove>('bot');
 
   const [botCards, setBotCards] = useState<TCard[]>([]);
   const [secondBotCardClosed, setSecondBotCardClosed] = useState(true);
@@ -37,7 +39,7 @@ export const BlackJackGame: React.FC = () => {
     handleDrawCards(2);
     // Передаем ход игроку спустя интервал времени
     setTimeout(() => {
-      setMove('user');
+      setMove(EWhoseMove.user);
     }, 1000);
 
     return handleReshuffleCards;
@@ -46,7 +48,7 @@ export const BlackJackGame: React.FC = () => {
 
   // При переходе хода на игрока берутся 2 начальные карты, при втором переходе на бота запускается нейронная сеть
   useEffect(() => {
-    if (move == 'user') {
+    if (move === EWhoseMove.user) {
       handleDrawCards(2);
     } else {
       if (botCards.length) {
@@ -64,7 +66,7 @@ export const BlackJackGame: React.FC = () => {
   // Добавлять запрошенные новые карты тому, чей ход
   useEffect(() => {
     if (!drawnCards.isLoading && drawnCards.data) {
-      move == 'bot'
+      move == EWhoseMove.bot
         ? setBotCards([...botCards, ...drawnCards.data.cards])
         : setUserCards([...userCards, ...drawnCards.data.cards]);
     }
@@ -172,7 +174,7 @@ export const BlackJackGame: React.FC = () => {
   };
 
   const handleCountResult = () => {
-    setMove('bot');
+    setMove(EWhoseMove.bot);
   };
 
   return (
@@ -231,7 +233,7 @@ export const BlackJackGame: React.FC = () => {
             </div>
 
             <div className={styles.blackJackGame_root_table_user_score}>
-              Ваш счет: <span style={{ color: 'yellow' }}>{getCardsScore(userCards)}</span>
+              Ваш счет: <span>{getCardsScore(userCards)}</span>
             </div>
 
             <div className={styles.blackJackGame_root_table_user_actions}>

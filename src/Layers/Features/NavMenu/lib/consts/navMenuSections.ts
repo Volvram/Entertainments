@@ -1,6 +1,6 @@
-import { SectionType } from '@/Layers/Entities/Section/UI/SectionItem/Types.ts';
+import { TSection } from '@/Layers/Entities/Section/UI/SectionItem/Types.ts';
 
-export const navMenuSections: SectionType[] = [
+export const NAV_MENU_SECTIONS: TSection[] = [
   {
     id: 'main',
     name: 'Главная',

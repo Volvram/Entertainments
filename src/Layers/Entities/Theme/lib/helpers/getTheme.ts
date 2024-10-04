@@ -1,14 +1,16 @@
-import { themes } from '@/Layers/Entities/Theme/lib/consts/themes.ts';
+import { ETheme } from '../../UI/ThemeSwitch/Types';
 
 export const getTheme = () => {
-  const theme = `${window?.localStorage?.getItem('theme')}`;
+  const theme = window?.localStorage.getItem('theme') as ETheme;
 
-  if (theme == 'light' || theme == 'dark') {
-    if (Object.values(themes).includes(theme)) return theme;
+  if (Object.values(ETheme).includes(theme)) {
+    return theme;
   }
 
   const userMedia = window.matchMedia('(prefers-color-scheme: light)');
-  if (userMedia.matches) return themes.light;
+  if (userMedia.matches) {
+    return ETheme.light;
+  }
 
-  return themes.dark;
+  return ETheme.dark;
 };

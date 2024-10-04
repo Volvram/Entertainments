@@ -1,18 +1,11 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 
 import cn from 'classnames';
 
 import styles from './styles.module.scss';
+import { TCard } from './Types';
 
-type CardProps = PropsWithChildren<{
-  title?: string;
-  image?: string;
-  description?: string;
-  className?: string;
-  imageClassName?: string;
-}>;
-
-export const Card: React.FC<CardProps> = ({
+export const Card: React.FC<TCard> = ({
   title,
   image,
   description,

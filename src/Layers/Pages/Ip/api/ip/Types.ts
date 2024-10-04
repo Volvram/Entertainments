@@ -1,4 +1,4 @@
-export interface IIP {
+export interface IIpResponse {
   ip: string;
   city: string;
   region: string;
@@ -9,3 +9,5 @@ export interface IIP {
   timezone: string;
   readme: string;
 }
+
+export type TIpRequest = string;

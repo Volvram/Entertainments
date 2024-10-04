@@ -1,4 +1,4 @@
-export const playingCardScores = {
+export const PLAYING_CARD_SCORES = {
   '2': 2,
   '3': 3,
   '4': 4,
