@@ -6,13 +6,12 @@
 }
 
 :root[data-theme="dark"] {
-  --score-text-color: #1D2130;
-  --score-color: 'yellow';
+  --score-text-color: #ffffff;
+  --score-color: #ffff00;
 }
 
 .blackJackGame {
   min-height: 100vh;
-  color: $white;
 
   &_background {
     position: absolute;
