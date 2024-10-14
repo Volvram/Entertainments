@@ -2,14 +2,14 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 're
 
 import cn from 'classnames';
 
+import { FlippingCard } from '@/Layers/Shared/UI/FlippingCard';
 
 import styles from './styles.module.scss';
 import { CARD_BACK_IMAGE } from '../../consts/cardBackImage.ts';
 import { CustomPlayingCardRefType, TPlayingCard } from '../../UI/PlayingCard/Types.ts';
-import { FlippingCard } from '@/Layers/Shared/UI/FlippingCard';
 
 export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(function PlayingCard(
-  { card, flipping = true, isFlipped = false, onClick, className },
+  { card, flipping = true, isFlipped = false, onClick, receiveCardAnimation, className },
   ref
 ) {
   const cardRef = useRef<HTMLImageElement | null>(null);
@@ -35,23 +35,6 @@ export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(fu
     if (flipping) {
       setIsFlipped(!_isFlipped);
     }
-  };
-
-  const receiveCard = () => {
-    cardRef.current?.animate(
-      [
-        {
-          transform: 'translate(-300%, -300%)',
-        },
-        {
-          transform: 'translate(0, 0)',
-        },
-      ],
-      {
-        duration: 500,
-        fill: 'forwards',
-      }
-    );
   };
 
   const hoverCard = () => {
@@ -97,7 +80,9 @@ export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(fu
         <img
           key={card.code}
           src={card.image}
-          onLoad={receiveCard}
+          onLoad={() => {
+            receiveCardAnimation && receiveCardAnimation(cardRef);
+          }}
           onMouseOver={hoverCard}
           onMouseOut={unhoverCard}
           className={cn(styles.playingCard, className)}
@@ -108,7 +93,9 @@ export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(fu
         <img
           key={card.code}
           src={CARD_BACK_IMAGE}
-          onLoad={receiveCard}
+          onLoad={() => {
+            receiveCardAnimation && receiveCardAnimation(cardRef);
+          }}
           onMouseOver={hoverCard}
           onMouseOut={unhoverCard}
           className={cn(styles.playingCard, className)}

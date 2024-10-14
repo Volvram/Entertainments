@@ -8,6 +8,7 @@ import {
   useLazyCreateDeckQuery,
   useLazyRequestDeckQuery,
 } from '@/Layers/Shared/api/cards/CardsService.ts';
+import { isFetchBaseQueryErrorTypeGuard } from '@/Layers/Shared/lib/TypeGuards.ts';
 import { Button } from '@/Layers/Shared/UI/Button';
 
 import styles from './styles.module.scss';
@@ -18,8 +19,8 @@ export const BlackJackMenu: React.FC = () => {
   const { cards } = useAppSelector((state) => state.cardsReducer);
   const { setCardGame, addDeck } = CardsSlice.actions;
   const dispatch = useAppDispatch();
-  const [createNewDeck, createdDeck] = useLazyCreateDeckQuery();
-  const [requestDeck, deck] = useLazyRequestDeckQuery();
+  const [createNewDeck] = useLazyCreateDeckQuery();
+  const [requestDeck] = useLazyRequestDeckQuery();
 
   // Если в списке карточных игр нет Блэк-Джека, то создать
   React.useEffect(() => {
@@ -28,41 +29,37 @@ export const BlackJackMenu: React.FC = () => {
     }
   }, [cards, dispatch, setCardGame]);
 
-  // Если произошел запрос на создание колоды
-  React.useEffect(() => {
-    if (createdDeck.error) {
-      alert(createdDeck.error);
-      return;
-    }
-    if (createdDeck.data) {
-      dispatch(addDeck({ gameId: 'black-jack', deckId: createdDeck.data.deck_id }));
-      navigate(`../game/${createdDeck.data.deck_id}`);
-    }
-  }, [createdDeck, dispatch, addDeck, navigate]);
-
-  // Если произошел запрос на получение
-  React.useEffect(() => {
-    if (deck.error) {
-      alert(deck.error);
-      return;
-    }
-    if (deck.data) {
-      navigate(`../game/${deck.data.deck_id}`);
-    }
-  }, [deck, navigate]);
-
   const handleCreateNewDeck = () => {
     const params = {
       shuffle: true,
     };
 
-    createNewDeck(params);
+    createNewDeck(params)
+      .unwrap()
+      .then((data) => {
+        dispatch(addDeck({ gameId: 'black-jack', deckId: data.deck_id }));
+        navigate(`../game/${data.deck_id}`);
+      })
+      .catch((error) => {
+        if (isFetchBaseQueryErrorTypeGuard(error) && error.data?.error) {
+          alert(error.data?.error);
+        }
+      });
   };
 
   const handleContinueLastGame = () => {
     const lastGame = cards.games['black-jack'].deckIds[0];
 
-    requestDeck(lastGame);
+    requestDeck(lastGame)
+      .unwrap()
+      .then((data) => {
+        navigate(`../game/${data.deck_id}`);
+      })
+      .catch((error) => {
+        if (isFetchBaseQueryErrorTypeGuard(error) && error.data?.error) {
+          alert(error.data?.error);
+        }
+      });
   };
 
   return (

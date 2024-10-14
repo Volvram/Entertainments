@@ -11,5 +11,6 @@ export type TPlayingCard = {
   flipping?: boolean;
   isFlipped?: boolean;
   onClick?: (ref: React.MutableRefObject<HTMLImageElement | null>) => void;
+  receiveCardAnimation?: (ref: React.RefObject<HTMLImageElement | null>) => void;
   className?: string;
 };
