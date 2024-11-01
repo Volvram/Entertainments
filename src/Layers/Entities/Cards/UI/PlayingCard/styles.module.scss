@@ -1,6 +1,11 @@
 @import "@/Layers/Shared/styles/variables";
 
 .playingCard {
+  display: none;
   width: 100px;
   height: 139px;
+
+  &_appeared {
+    display: block;
+  }
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useIntl } from 'react-intl';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { PlayingCard } from '@/Layers/Entities/Cards';
@@ -20,6 +21,7 @@ import { EWhoseMove } from './Types.ts';
 import { getCardsScore } from '../../lib/helpers/getCardsScore.ts';
 
 export const BlackJackGame: React.FC = () => {
+  const intl = useIntl();
   const navigate = useNavigate();
   const { id } = useParams();
   const { data: deck } = useRequestDeckQuery(id ?? '');
@@ -31,37 +33,29 @@ export const BlackJackGame: React.FC = () => {
   const [secondBotCardClosed, setSecondBotCardClosed] = useState(true);
   const [userCards, setUserCards] = useState<TCard[]>([]);
 
-  // Возвращаем карты в колоду и перемешиваем при новой игре
-  useEffect(() => {
-    startGame();
-
-    return handleReshuffleCards;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deck]);
-
   // Обработка подсчета результатов игры при открытии карты бота
   useEffect(() => {
     if (!secondBotCardClosed) {
       setTimeout(() => {
         if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) > 21) {
-          alert('Вы победили!');
+          alert(`${intl.messages['youWon']}!`);
         } else if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) <= 21) {
           if (getCardsScore(userCards) > getCardsScore(botCards)) {
-            alert('Вы победили!');
+            alert(`${intl.messages['youWon']}!`);
           } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
-            alert('Ничья');
+            alert(intl.messages['tie']);
           } else {
-            alert('Вы проиграли');
+            alert(intl.messages['youLost']);
           }
         } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) <= 21) {
-          alert('Вы проиграли');
+          alert(intl.messages['youLost']);
         } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) > 21) {
           if (getCardsScore(userCards) > getCardsScore(botCards)) {
-            alert('Вы проиграли');
+            alert(intl.messages['youLost']);
           } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
-            alert('Ничья');
+            alert(intl.messages['tie']);
           } else {
-            alert('Вы победили!');
+            alert(`${intl.messages['youWon']}!`);
           }
         }
 
@@ -71,14 +65,24 @@ export const BlackJackGame: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [secondBotCardClosed]);
 
-  const startGame = () => {
-    handleReshuffleCards();
+  const handleDrawCardsAsync = async (count: number = 1, player?: EWhoseMove) => {
+    try {
+      if (id) {
+        const drawnCards = await drawCards({ deckId: id, count }).unwrap();
 
-    handleDrawCards(2, EWhoseMove.bot);
-
-    setTimeout(() => {
-      handleDrawCards(2, EWhoseMove.user);
-    }, 1000);
+        player == EWhoseMove.bot
+          ? setBotCards([...botCards, ...drawnCards.cards])
+          : setUserCards([...userCards, ...drawnCards.cards]);
+      }
+    } catch (error) {
+      if (isFetchBaseQueryErrorTypeGuard(error)) {
+        alert(
+          `${intl.messages['error']}: ${error.status}. ${intl.messages['somethingWentWrongTryLater']}.`
+        );
+      } else {
+        alert(error);
+      }
+    }
   };
 
   const handleDrawCards = (count: number = 1, player?: EWhoseMove) => {
@@ -92,7 +96,9 @@ export const BlackJackGame: React.FC = () => {
         })
         .catch((error) => {
           if (isFetchBaseQueryErrorTypeGuard(error)) {
-            alert(`Ошибка: ${error.status}. Что-то пошло не так, попробуйте позже.`);
+            alert(
+              `${intl.messages['error']}: ${error.status}. ${intl.messages['somethingWentWrongTryLater']}.`
+            );
           } else {
             alert(error);
           }
@@ -107,7 +113,9 @@ export const BlackJackGame: React.FC = () => {
         .unwrap()
         .catch((error) => {
           if (isFetchBaseQueryErrorTypeGuard(error)) {
-            alert(`Ошибка: ${error.status}. Что-то пошло не так, попробуйте позже.`);
+            alert(
+              `${intl.messages['error']}: ${error.status}. ${intl.messages['somethingWentWrongTryLater']}.`
+            );
           } else {
             alert(error);
           }
@@ -151,6 +159,19 @@ export const BlackJackGame: React.FC = () => {
     }
   };
 
+  // Старт новой игры
+  useEffect(() => {
+    handleReshuffleCards();
+
+    // Тянем начальные карты
+    if (botCards.length === 0 && userCards.length === 0) {
+      handleDrawCardsAsync(2, EWhoseMove.bot).then(() => {
+        handleDrawCards(2, EWhoseMove.user);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deck]);
+
   const receiveCardAnimation = (ref: React.RefObject<HTMLImageElement | null>) => {
     ref.current?.animate(
       [
@@ -179,11 +200,11 @@ export const BlackJackGame: React.FC = () => {
           }}
           className={styles.blackJackGame_root_back}
         />
-        Блэк-Джек Игра #{deck ? deck.deck_id : null}
+        {`${intl.messages['blackJack']} ${intl.messages['game']} #`} {deck ? deck.deck_id : null}
         <div className={styles.blackJackGame_root_table}>
           <div className={styles.blackJackGame_root_table_bot}>
             <div className={styles.blackJackGame_root_table_bot_score}>
-              Счет бота:{' '}
+              {`${intl.messages['botScore']}: `}
               {secondBotCardClosed
                 ? `${getCardsScore(botCards.slice(0, 1))} + ?`
                 : `${getCardsScore(botCards)}`}
@@ -233,7 +254,8 @@ export const BlackJackGame: React.FC = () => {
             </div>
 
             <div className={styles.blackJackGame_root_table_user_score}>
-              Ваш счет: <span>{getCardsScore(userCards)}</span>
+              {`${intl.messages['yourScore']}: `}
+              <span>{getCardsScore(userCards)}</span>
             </div>
 
             <div className={styles.blackJackGame_root_table_user_actions}>
@@ -244,13 +266,13 @@ export const BlackJackGame: React.FC = () => {
                 className={styles.blackJackGame_root_table_user_actions_button}
                 disabled={getCardsScore(userCards) >= 21 || drawCardsResponse.isLoading}
               >
-                Потянуть карту
+                {intl.messages['drawCard'] as string}
               </Button>
               <Button
                 onClick={handleCountResult}
                 className={styles.blackJackGame_root_table_user_actions_button}
               >
-                Остановиться
+                {intl.messages['stop'] as string}
               </Button>
             </div>
           </div>

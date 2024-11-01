@@ -5,7 +5,7 @@ import cn from 'classnames';
 import { FlippingCard } from '@/Layers/Shared/UI/FlippingCard';
 
 import styles from './styles.module.scss';
-import { CARD_BACK_IMAGE } from '../../consts/cardBackImage.ts';
+import { CARD_BACK_IMAGE } from '@/Layers/Entities/Cards/lib/consts/cardBackImage.ts';
 import { CustomPlayingCardRefType, TPlayingCard } from '../../UI/PlayingCard/Types.ts';
 
 export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(function PlayingCard(
@@ -14,6 +14,7 @@ export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(fu
 ) {
   const cardRef = useRef<HTMLImageElement | null>(null);
   const [_isFlipped, setIsFlipped] = useState(isFlipped);
+  const [appeared, setAppeared] = useState<boolean>(false);
 
   useImperativeHandle(
     ref,
@@ -81,11 +82,12 @@ export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(fu
           key={card.code}
           src={card.image}
           onLoad={() => {
+            setAppeared(true);
             receiveCardAnimation && receiveCardAnimation(cardRef);
           }}
           onMouseOver={hoverCard}
           onMouseOut={unhoverCard}
-          className={cn(styles.playingCard, className)}
+          className={cn(styles.playingCard, className, appeared && styles.playingCard_appeared)}
           alt={card.code}
         />
       }
@@ -93,12 +95,9 @@ export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(fu
         <img
           key={card.code}
           src={CARD_BACK_IMAGE}
-          onLoad={() => {
-            receiveCardAnimation && receiveCardAnimation(cardRef);
-          }}
           onMouseOver={hoverCard}
           onMouseOut={unhoverCard}
-          className={cn(styles.playingCard, className)}
+          className={cn(styles.playingCard, className, appeared && styles.playingCard_appeared)}
           alt={card.code}
         />
       }

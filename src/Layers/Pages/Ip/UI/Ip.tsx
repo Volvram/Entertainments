@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import { useIntl } from 'react-intl';
+
 import { Button } from '@/Layers/Shared/UI/Button';
 import { Input } from '@/Layers/Shared/UI/Input';
 
@@ -9,6 +11,7 @@ import { useFetchOwnIpQuery } from '../api/ownIp/OwnIpService.ts';
 import { IP_HOST } from '../lib/consts/IpHosts.ts';
 
 export const Ip: React.FC = () => {
+  const intl = useIntl();
   const [ip, setIp] = useState('');
 
   const { data: ownIp, error: ownIpError, isLoading: isLoadingOwnIp } = useFetchOwnIpQuery();
@@ -27,15 +30,16 @@ export const Ip: React.FC = () => {
 
   const renderOwnIp = () => {
     if (ownIpError) {
-      return <div>Что-то пошло не так, попробуйте позже</div>;
+      return <div>{intl.messages['somethingWentWrongTryLater'] as string}</div>;
     }
 
     if (isLoadingOwnIp) {
-      return <div>Идет подгрузка IP...</div>;
+      return <div>{intl.messages['IpUploading'] as string}...</div>;
     } else {
       return (
         <h2 className={styles.ip_h}>
-          Ваш IP-адрес: <span className={styles.ip_h_adress}>{ownIp?.ip}</span>
+          {intl.messages['yourIpAddress'] as string}:
+          <span className={styles.ip_h_adress}>{ownIp?.ip}</span>
         </h2>
       );
     }
@@ -43,24 +47,46 @@ export const Ip: React.FC = () => {
 
   const renderIpGeo = () => {
     if (ipGeo.error) {
-      return <div>Ошибка получения данных IP-адреса: {`${ipGeo.error}`}</div>;
+      return (
+        <div>
+          {intl.messages['gettingIpAddressError'] as string}: {`${ipGeo.error}`}
+        </div>
+      );
     }
 
     if (ipGeo.isLoading || !ipGeo.data) {
-      return <div className={styles.ip_geo}>Данные IP-адреса ищутся...</div>;
+      return (
+        <div className={styles.ip_geo}>{`${intl.messages['IpAddressDataIsSearched']}...`}</div>
+      );
     } else {
       return (
         <div className={styles.ip_geo}>
-          <h3 className={styles.ip_geo_h}>IP: {ipGeo.data.ip}</h3>
-          <div>Город: {ipGeo.data.city}</div>
-          <div>Регион: {ipGeo.data.region}</div>
-          <div>Страна: {ipGeo.data.country}</div>
-          <div>Координаты: {ipGeo.data.loc}</div>
-          <div>Организация: {ipGeo.data.org}</div>
-          <div>Индекс: {ipGeo.data.postal}</div>
-          <div>Часовой пояс: {ipGeo.data.timezone}</div>
+          <h3 className={styles.ip_geo_h}>
+            {intl.messages['IP'] as string}: {ipGeo.data.ip}
+          </h3>
           <div>
-            Подробнее на:{' '}
+            {intl.messages['city'] as string}: {ipGeo.data.city}
+          </div>
+          <div>
+            {intl.messages['region'] as string}: {ipGeo.data.region}
+          </div>
+          <div>
+            {intl.messages['country'] as string}: {ipGeo.data.country}
+          </div>
+          <div>
+            {intl.messages['coordinates'] as string}: {ipGeo.data.loc}
+          </div>
+          <div>
+            {intl.messages['organization'] as string}: {ipGeo.data.org}
+          </div>
+          <div>
+            {intl.messages['index'] as string}: {ipGeo.data.postal}
+          </div>
+          <div>
+            {intl.messages['timeZone'] as string}: {ipGeo.data.timezone}
+          </div>
+          <div>
+            {`${intl.messages['moreDetailsAt']}: `}
             <a href={`${IP_HOST}/${ipGeo.data.ip}`} className={styles.ip_geo_link}>
               {`${IP_HOST}/${ipGeo.data.ip}`}
             </a>
@@ -80,7 +106,7 @@ export const Ip: React.FC = () => {
             setIp(value);
           }}
         />
-        <Button onClick={handleSearch}>Найти</Button>
+        <Button onClick={handleSearch}>{intl.messages['find'] as string}</Button>
       </div>
       <div>{renderIpGeo()}</div>
     </div>

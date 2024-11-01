@@ -1,11 +1,14 @@
 import React from 'react';
 
+import { useIntl } from 'react-intl';
+
 import { Button } from '@/Layers/Shared/UI/Button';
 
 import styles from './styles.module.scss';
 import { useFetchRandomJokeQuery } from '../api/RandomJokeService.ts';
 
 export const RandomJokes: React.FC = () => {
+  const intl = useIntl();
   // const { data: randomJoke } = randomJokeApi.useFetchRandomJokeQuery('');
   const { data: randomJoke, error, isLoading, refetch } = useFetchRandomJokeQuery();
 
@@ -15,11 +18,11 @@ export const RandomJokes: React.FC = () => {
 
   const renderRandomJoke = () => {
     if (error) {
-      return <div>Произошла ошибка, попробуйте позже</div>;
+      return <div>{intl.messages['somethingWentWrongTryLater'] as string}</div>;
     }
 
     if (isLoading) {
-      return <div>Шутка подгружается...</div>;
+      return <div>{`${intl.messages['jokeUploading']}...`}</div>;
     } else {
       return (
         <div>
@@ -34,7 +37,7 @@ export const RandomJokes: React.FC = () => {
     <div className={styles.randomJokes}>
       <div className={styles.randomJokes_text}>{renderRandomJoke()}</div>
       <Button onClick={handleUpdateJoke} className={styles.randomJokes_btn}>
-        Обновить
+        {intl.messages['Update'] as string}
       </Button>
     </div>
   );
