@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { TCards } from '@/Layers/Pages/CardGames/UI/CardGames/Types.ts';
 import { getCardGames } from '@/Layers/Shared/lib/helpers/getCardGames.ts';
-import { CardsType } from '@/Layers/Pages/CardGames/UI/CardGames/Types.ts';
 
 interface CardsState {
-  cards: CardsType;
+  cards: TCards;
 }
 
 const initialState: CardsState = {
@@ -22,7 +22,7 @@ export const CardsSlice = createSlice({
     },
     addDeck(state, action: PayloadAction<{ gameId: string; deckId: string }>) {
       const exists = state.cards.games[action.payload.gameId].deckIds.find(
-        (deckId) => deckId == action.payload.deckId
+        (deckId: string) => deckId == action.payload.deckId
       );
 
       if (!exists) {
@@ -33,7 +33,7 @@ export const CardsSlice = createSlice({
     removeDeck(state, action: PayloadAction<{ gameId: string; deckId: string }>) {
       state.cards.games[action.payload.gameId].deckIds = state.cards.games[
         action.payload.gameId
-      ].deckIds.filter((deckId) => deckId != action.payload.deckId);
+      ].deckIds.filter((deckId: string) => deckId != action.payload.deckId);
       localStorage.setItem('cardGames', JSON.stringify(state.cards.games));
     },
     resetAllDecks(state) {

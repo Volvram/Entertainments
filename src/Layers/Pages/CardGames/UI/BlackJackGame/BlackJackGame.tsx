@@ -33,42 +33,19 @@ export const BlackJackGame: React.FC = () => {
   const [secondBotCardClosed, setSecondBotCardClosed] = useState(true);
   const [userCards, setUserCards] = useState<TCard[]>([]);
 
-  // Обработка подсчета результатов игры при открытии карты бота
-  useEffect(() => {
-    if (!secondBotCardClosed) {
-      setTimeout(() => {
-        if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) > 21) {
-          alert(`${intl.messages['youWon']}!`);
-        } else if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) <= 21) {
-          if (getCardsScore(userCards) > getCardsScore(botCards)) {
-            alert(`${intl.messages['youWon']}!`);
-          } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
-            alert(intl.messages['tie']);
-          } else {
-            alert(intl.messages['youLost']);
-          }
-        } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) <= 21) {
-          alert(intl.messages['youLost']);
-        } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) > 21) {
-          if (getCardsScore(userCards) > getCardsScore(botCards)) {
-            alert(intl.messages['youLost']);
-          } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
-            alert(intl.messages['tie']);
-          } else {
-            alert(`${intl.messages['youWon']}!`);
-          }
-        }
-
-        window.location.reload();
-      }, 2000);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [secondBotCardClosed]);
-
-  const handleDrawCardsAsync = async (count: number = 1, player?: EWhoseMove) => {
+  const handleDrawCardsAsync = async (
+    count: number = 1,
+    player?: EWhoseMove,
+    replace: boolean = false
+  ) => {
     try {
       if (id) {
         const drawnCards = await drawCards({ deckId: id, count }).unwrap();
+
+        if (replace) {
+          player == EWhoseMove.bot ? setBotCards(drawnCards.cards) : setUserCards(drawnCards.cards);
+          return;
+        }
 
         player == EWhoseMove.bot
           ? setBotCards([...botCards, ...drawnCards.cards])
@@ -85,11 +62,16 @@ export const BlackJackGame: React.FC = () => {
     }
   };
 
-  const handleDrawCards = (count: number = 1, player?: EWhoseMove) => {
+  const handleDrawCards = (count: number = 1, player?: EWhoseMove, replace: boolean = false) => {
     if (id) {
       drawCards({ deckId: id, count })
         .unwrap()
         .then((data) => {
+          if (replace) {
+            player == EWhoseMove.bot ? setBotCards(data.cards) : setUserCards(data.cards);
+            return;
+          }
+
           player == EWhoseMove.bot
             ? setBotCards([...botCards, ...data.cards])
             : setUserCards([...userCards, ...data.cards]);
@@ -159,18 +141,54 @@ export const BlackJackGame: React.FC = () => {
     }
   };
 
-  // Старт новой игры
-  useEffect(() => {
+  const startGame = () => {
     handleReshuffleCards();
 
     // Тянем начальные карты
+    handleDrawCardsAsync(2, EWhoseMove.bot, true).then(() => {
+      handleDrawCards(2, EWhoseMove.user, true);
+    });
+  };
+
+  // Автоматический старт при заходе на страницу
+  useEffect(() => {
     if (botCards.length === 0 && userCards.length === 0) {
-      handleDrawCardsAsync(2, EWhoseMove.bot).then(() => {
-        handleDrawCards(2, EWhoseMove.user);
-      });
+      startGame();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deck]);
+
+  // Обработка подсчета результатов игры при открытии карты бота
+  useEffect(() => {
+    if (!secondBotCardClosed) {
+      setTimeout(() => {
+        if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) > 21) {
+          alert(`${intl.messages['youWon']}!`);
+        } else if (getCardsScore(userCards) <= 21 && getCardsScore(botCards) <= 21) {
+          if (getCardsScore(userCards) > getCardsScore(botCards)) {
+            alert(`${intl.messages['youWon']}!`);
+          } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
+            alert(intl.messages['tie']);
+          } else {
+            alert(intl.messages['youLost']);
+          }
+        } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) <= 21) {
+          alert(intl.messages['youLost']);
+        } else if (getCardsScore(userCards) > 21 && getCardsScore(botCards) > 21) {
+          if (getCardsScore(userCards) > getCardsScore(botCards)) {
+            alert(intl.messages['youLost']);
+          } else if (getCardsScore(userCards) == getCardsScore(botCards)) {
+            alert(intl.messages['tie']);
+          } else {
+            alert(`${intl.messages['youWon']}!`);
+          }
+        }
+
+        startGame();
+      }, 2000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [secondBotCardClosed]);
 
   const receiveCardAnimation = (ref: React.RefObject<HTMLImageElement | null>) => {
     ref.current?.animate(
