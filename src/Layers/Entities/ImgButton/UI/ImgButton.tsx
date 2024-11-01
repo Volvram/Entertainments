@@ -16,7 +16,13 @@ export const ImgButton: React.FC<TImgButton> = ({ icon, onClick, name, className
           <img src={icon} className={styles.root_icon} alt={name} />
         </Button>
       ) : (
-        <IconButton id='fade-button' aria-haspopup='true' color='inherit' className={styles.root_button} onClick={onClick}>
+        <IconButton
+          id='fade-button'
+          aria-haspopup='true'
+          color='inherit'
+          className={styles.root_button}
+          onClick={onClick}
+        >
           {icon}
         </IconButton>
       )}

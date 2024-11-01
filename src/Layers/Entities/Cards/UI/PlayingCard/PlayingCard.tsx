@@ -2,10 +2,10 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 're
 
 import cn from 'classnames';
 
+import { CARD_BACK_IMAGE } from '@/Layers/Entities/Cards/lib/consts/cardBackImage.ts';
 import { FlippingCard } from '@/Layers/Shared/UI/FlippingCard';
 
 import styles from './styles.module.scss';
-import { CARD_BACK_IMAGE } from '@/Layers/Entities/Cards/lib/consts/cardBackImage.ts';
 import { CustomPlayingCardRefType, TPlayingCard } from '../../UI/PlayingCard/Types.ts';
 
 export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(function PlayingCard(
@@ -23,7 +23,7 @@ export const PlayingCard = forwardRef<CustomPlayingCardRefType, TPlayingCard>(fu
         setIsFlipped(!_isFlipped);
       },
     }),
-    []
+    [_isFlipped]
   );
 
   useEffect(() => {

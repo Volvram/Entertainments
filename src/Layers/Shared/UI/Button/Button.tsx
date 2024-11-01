@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 
 import cn from 'classnames';
 
@@ -14,8 +14,12 @@ export const Button: React.FC<TButton> = ({
 }) => {
   const classNames = cn(className, styles.button, disabled && styles.button_disabled);
 
+  const _onClick = (event: MouseEvent<HTMLButtonElement>) => {
+    !disabled && onClick && onClick(event);
+  };
+
   return (
-    <button type='button' className={classNames} onClick={onClick} disabled={disabled} {...rest}>
+    <button type='button' className={classNames} onClick={_onClick} disabled={disabled} {...rest}>
       {children}
     </button>
   );

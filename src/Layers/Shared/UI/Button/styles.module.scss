@@ -24,7 +24,11 @@
   }
 
   &_disabled {
-    cursor: default;
+    cursor: not-allowed;
     opacity: 0.5;
+
+    &:hover {
+      background-color: var(--btn-background-color);
+    }
   }
 }
